@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sergio Tacchini — Top Fit Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --white: #ffffff;
+            --off-white: #fafafa;
+            --bg: #ffffff;
+            --border: #e8e8e8;
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --text-muted: #999999;
+            --accent: #111111;
+            --tag-line-bg: #111111;
+            --tag-line-color: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
+            --radius: 10px;
+        }
+
+        body {
+            font-family: "Noto Sans KR", "Noto Sans", sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: #fff;
+            border-bottom: 1.5px solid var(--border);
+            padding: 22px 40px;
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+        }
+        .header-brand {
+            font-family: "Noto Sans", sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .header-title {
+            font-family: "Noto Sans", sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+        }
+        .header-title .emoji {
+            font-size: 18px;
+            margin-right: 6px;
+        }
+        .header-meta {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+        }
+
+        /* ── LOADING SCREEN ── */
+        #loading-screen {
+            position: fixed; inset: 0;
+            background: #fff;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            transition: opacity 0.5s ease;
+        }
+        #loading-screen.fade-out { opacity: 0; pointer-events: none; }
+        .loading-brand {
+            font-family: "Noto Sans", sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .loading-title {
+            font-family: "Noto Sans", sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .loading-bar-wrap {
+            width: 160px;
+            height: 2px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--text-primary);
+            border-radius: 2px;
+            animation: loadBar 0.9s ease forwards;
+        }
+        @keyframes loadBar {
+            0%   { width: 0%; }
+            60%  { width: 75%; }
+            100% { width: 100%; }
+        }
+
+        /* ── FILTERS BAR (always visible after load) ── */
+
+        /* ── FILTERS BAR ── */
+        .filters-bar {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 14px 40px;
+        }
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .filter-pill {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            border: 1.5px solid var(--border);
+            border-radius: 100px;
+            padding: 8px 18px;
+            background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .filter-pill:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+        }
+        .filter-pill label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .filter-pill select,
+        .filter-pill input {
+            border: none;
+            background: transparent;
+            font-family: "Noto Sans KR", "Noto Sans", sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            outline: none;
+            cursor: pointer;
+            min-width: 80px;
+        }
+        .filter-pill input { min-width: 140px; }
+        .filter-pill input::placeholder { color: var(--text-muted); }
+
+        .btn-reset {
+            background: none;
+            border: 1.5px solid var(--border);
+            border-radius: 100px;
+            padding: 9px 20px;
+            font-family: "Noto Sans", sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .btn-reset:hover { border-color: #aaa; color: #555; }
+
+        /* ── RESULTS AREA ── */
+        .results-area { padding: 0 40px 48px; }
+
+        .count-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 24px 0 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .count-bar strong { color: var(--text-primary); font-size: 14px; font-weight: 700; }
+
+        /* ── GRID ── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 18px;
+        }
+
+        /* card entrance animation */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            background: #fff;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: box-shadow 0.22s, border-color 0.22s, transform 0.22s;
+            animation: fadeUp 0.38s ease both;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #bbb;
+            transform: translateY(-3px);
+        }
+        .card-img {
+            width: 100%;
+            height: 300px;
+            background: var(--off-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-img img {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            object-position: center top;
+            display: block;
+        }
+        .card-body { padding: 14px 16px 16px; }
+        .card-ref {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+        .tag {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .tag-line  { background: var(--tag-line-bg); color: var(--tag-line-color); }
+        .tag-men   { background: #dbeafe; color: #1d4ed8; }
+        .tag-women { background: #fce7f3; color: #be185d; }
+        .tag-unisex{ background: #ede9fe; color: #6d28d9; }
+
+        .measures { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px; }
+        .measure-item { font-size: 11px; color: var(--text-secondary); }
+        .measure-item span { font-weight: 600; color: var(--text-primary); }
+        .remark {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 9px;
+            border-top: 1px solid var(--border);
+            padding-top: 8px;
+            line-height: 1.5;
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 720px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 36px;
+            position: relative;
+            animation: fadeUp 0.28s ease;
+        }
+        .modal-close {
+            position: absolute; top: 18px; right: 22px;
+            font-size: 22px; cursor: pointer;
+            color: var(--text-muted);
+            background: none; border: none;
+            transition: color 0.15s;
+        }
+        .modal-close:hover { color: var(--text-primary); }
+        .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+        .modal-img {
+            width: 100%;
+            border-radius: 10px;
+            background: var(--off-white);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); font-size: 13px;
+            min-height: 300px; overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .modal-img img { width: 100%; object-fit: contain; object-position: center top; max-height: 420px; display: block; border-radius: 10px; }
+        .modal-info h2 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+        .modal-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        .modal-table tr td { padding: 6px 8px; font-size: 12px; border-bottom: 1px solid var(--border); }
+        .modal-table tr td:first-child { color: var(--text-muted); width: 55%; }
+        .modal-table tr td:last-child { font-weight: 600; color: var(--text-primary); }
+
+        /* ── EMPTY STATE ── */
+        .empty {
+            grid-column: 1/-1;
+            padding: 60px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        @media(max-width: 640px) {
+            header { padding: 18px 20px; }
+            .hero { padding: 48px 20px 40px; }
+            .hero.compact { padding: 16px 20px 0; }
+            .results-area { padding: 0 16px 40px; }
+            .grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .card-img { height: 220px; }
+            .modal-grid { grid-template-columns: 1fr; }
+            .modal { padding: 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+    <div class="loading-brand">Sergio Tacchini</div>
+    <div class="loading-title">👕 Top Fit Guide</div>
+    <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</div>
+
+<header>
+    <div>
+        <div class="header-brand">Sergio Tacchini</div>
+        <div class="header-title"><span class="emoji">👕</span>Top Fit Guide</div>
+    </div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 04월 15일 17:03</div>
+</header>
+
+<!-- FILTERS BAR -->
+<div class="filters-bar">
+    <div class="filters">
+        <div class="filter-pill">
+            <label>👤 Gender</label>
+            <select id="filter-gender">
+                <option value="">All</option>
+                <option value="MEN">MEN</option>
+                <option value="WOMEN">WOMEN</option>
+            </select>
+        </div>
+        <div class="filter-pill">
+            <label>📋 Line</label>
+            <select id="filter-line">
+                <option value="">All</option>
+                <option value="RS">RS</option>
+                <option value="MT">MT</option>
+                <option value="PQ">PQ</option>
+                <option value="RL">RL</option>
+                <option value="TR">TR</option>
+                <option value="WJ">WJ</option>
+                <option value="SL">SL</option>
+            </select>
+        </div>
+        <div class="filter-pill">
+            <label>📐 Fit</label>
+            <select id="filter-fit">
+                <option value="">All</option>
+                <option value="SLIM">SLIM</option>
+                <option value="REGULAR">REGULAR</option>
+                <option value="SEMI-OVER">SEMI-OVER</option>
+                <option value="OVER">OVER</option>
+            </select>
+        </div>
+        <div class="filter-pill">
+            <label>🔍 REF</label>
+            <input type="text" id="search-input" placeholder="REF 검색...">
+        </div>
+        <button class="btn-reset" onclick="resetAll()">↺ RESET</button>
+    </div>
+</div>
+
+<!-- RESULTS -->
+<div class="results-area" id="results-area">
+    <div class="count-bar"><strong id="count">0</strong>&nbsp;items</div>
+    <div class="grid" id="grid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-grid">
+            <div id="modal-img-wrap"></div>
+            <div class="modal-info">
+                <div class="tags" id="modal-tags"></div>
+                <h2 id="modal-ref"></h2>
+                <div id="modal-remark" style="font-size:12px;color:#999;margin-bottom:10px;"></div>
+                <table class="modal-table" id="modal-table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const DATA = [{"line": "RS", "ref": "TM-RS111-61", "uid": "TM-RS111-61", "gender": "MEN", "pom": "", "fit": "REGULAR", "remark": "구 스포티핏", "measures": {"Back Body Length": "68", "Chest Circumference": "108", "Sweep Straight": "106", "Neck Width": "19.5", "Front Neck Drop": "10.5", "Across Shoulder": "46", "CB to SLV Length": "45", "Bicep": "42.5", "Sleeve Opening": "37", "AH Drop": "28", "Neck Trim Height": "1.8"}}, {"line": "RS", "ref": "TM-RS153-61", "uid": "TM-RS153-61", "gender": "MEN", "pom": "", "fit": "REGULAR", "remark": "소로나 멜란지", "measures": {"Back Body Length": "69", "Chest Circumference": "110", "Sweep Straight": "108", "Neck Width": "19.5", "Front Neck Drop": "11", "Across Shoulder": "49", "CB to SLV Length": "49", "Bicep": "43", "Sleeve Opening": "38", "AH Drop": "28.5", "Neck Trim Height": "1.8"}}, {"line": "RS", "ref": "TX-RS102-63", "uid": "TX-RS102-63", "gender": "UNISEX", "pom": "", "fit": "REGULAR", "remark": "소로나쿨", "measures": {"Back Body Length": "68", "Chest Circumference": "108", "Sweep Straight": "106", "Neck Width": "19.5", "Front Neck Drop": "10.5", "Across Shoulder": "47", "CB to SLV Length": "46", "Bicep": "41", "Sleeve Opening": "35.5", "AH Drop": "28", "Neck Trim Height": "2"}}, {"line": "RS", "ref": "TX-RS103-63", "uid": "TX-RS103-63", "gender": "UNISEX", "pom": "", "fit": "SEMI-OVER", "remark": "소로나쿨", "measures": {"Back Body Length": "69", "Chest Circumference": "115", "Sweep Straight": "112", "Neck Width": "19.5", "Front Neck Drop": "11", "Across Shoulder": "50", "CB to SLV Length": "49", "Bicep": "45", "Sleeve Opening": "38", "AH Drop": "29", "Neck Trim Height": "2"}}, {"line": "RS", "ref": "TM-RS160-53", "uid": "TM-RS160-53", "gender": "MEN", "pom": "", "fit": "OVER", "remark": "소로나쿨", "measures": {"Back Body Length": "74.5", "Chest Circumference": "123", "Sweep Straight": "121", "Neck Width": "20", "Front Neck Drop": "11.5", "Across Shoulder": "56", "CB to SLV Length": "52", "Bicep": "46", "Sleeve Opening": "39", "AH Drop": "32", "Neck Trim Height": "2"}}, {"line": "SL", "ref": "TW-SL155-63", "uid": "TW-SL155-63", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "", "measures": {"Back Body Length": "52", "Chest Circumference": "70", "Waist": "70", "Sweep Straight": "76", "Neck Width": "17", "Front Neck Drop": "9", "Across Shoulder": "25.5", "AH Drop": "22", "Neck Trim Height": "1.5"}}, {"line": "RS", "ref": "TW-RS107-61", "uid": "TW-RS107-61", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "브러쉬드 폴리 스판", "measures": {"Back Body Length": "39.5", "Chest Circumference": "74", "Sweep Straight": "65", "Neck Width": "18", "Front Neck Drop": "9.5", "Across Shoulder": "37", "CB to SLV Length": "28.5", "Sleeve Opening": "27", "AH Drop": "21.5", "Neck Trim Height": "1"}}, {"line": "RS", "ref": "TW-RS155-61", "uid": "TW-RS155-61", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "나일론 골지 립", "measures": {"Back Body Length": "54", "Chest Circumference": "81.5", "Waist": "73", "Sweep Straight": "82", "Neck Width": "15.5", "Front Neck Drop": "9", "Across Shoulder": "라글란", "CB to SLV Length": "31", "Bicep": "30", "Sleeve Opening": "28", "AH Drop": "21.5", "Neck Trim Height": "1.5"}}, {"line": "RS", "ref": "TW-RS109-63", "uid": "TW-RS109-63", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "골지", "measures": {"Back Body Length": "46", "Chest Circumference": "78", "Waist": "74", "Sweep Straight": "77", "Neck Width": "18", "Front Neck Drop": "8.5", "Across Shoulder": "35", "CB to SLV Length": "30.5", "Sleeve Opening": "30", "AH Drop": "21", "Neck Trim Height": "1.5"}}, {"line": "RS", "ref": "TW-RS103-63", "uid": "TW-RS103-63", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "소로나쿨", "measures": {"Back Body Length": "44.5", "Chest Circumference": "84", "Sweep Straight": "76", "Neck Width": "17", "Front Neck Drop": "9", "Across Shoulder": "36", "CB to SLV Length": "31.5", "Sleeve Opening": "33", "AH Drop": "22"}}, {"line": "RS", "ref": "TW-RS104-63", "uid": "TW-RS104-63", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "소로나쿨, 넥 랍빠", "measures": {"Back Body Length": "49", "Chest Circumference": "87", "Waist": "84", "Sweep Straight": "86", "Neck Width": "15.5", "Front Neck Drop": "9", "Across Shoulder": "37", "CB to SLV Length": "32", "Bicep": "32.5", "Sleeve Opening": "31.5", "AH Drop": "22", "Neck Trim Height": "1.5"}}, {"line": "RS", "ref": "TW-RS111-61", "uid": "TW-RS111-61", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "구 스포티핏, 레이피케", "measures": {"Back Body Length": "56.5", "Chest Circumference": "90", "Waist": "86", "Sweep Straight": "92", "Neck Width": "17.5", "Front Neck Drop": "9.5", "Across Shoulder": "38", "CB to SLV Length": "35.5", "Bicep": "31.5", "Sleeve Opening": "30", "AH Drop": "22.5", "Neck Trim Height": "1.5"}}, {"line": "RS", "ref": "TW-RS106-63", "uid": "TW-RS106-63", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "레귤러핏 바디", "measures": {"Back Body Length": "56.5", "Chest Circumference": "92", "Waist": "89", "Sweep Straight": "94", "Neck Width": "17.5", "Front Neck Drop": "9", "Across Shoulder": "38", "CB to SLV Length": "35", "Bicep": "33", "Sleeve Opening": "31", "AH Drop": "23", "Neck Trim Height": "2"}}, {"line": "RS", "ref": "TW-RS158-53", "uid": "TW-RS158-53", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "43.5", "Chest Circumference": "96", "Sweep Straight": "94", "Neck Width": "18.5", "Front Neck Drop": "8.8", "Across Shoulder": "42", "CB to SLV Length": "41", "Bicep": "38", "Sleeve Opening": "32.5", "AH Drop": "24", "Neck Trim Height": "1.8"}}, {"line": "MT", "ref": "TX-MT141-64", "uid": "TX-MT141-64", "gender": "UNISEX", "pom": "", "fit": "REGULAR", "remark": "", "measures": {"Back Body Length": "68", "Chest Circumference": "110", "Sweep Straight": "96", "Neck Width": "19", "Front Neck Drop": "10.5", "Across Shoulder": "47", "CB to SLV Length": "88", "Bicep": "43", "Elbow": "33", "Sleeve Opening": "21", "AH Drop": "29", "CB Collar Height": "2"}}, {"line": "MT", "ref": "TX-MT141-54", "uid": "TX-MT141-54", "gender": "UNISEX", "pom": "", "fit": "REGULAR", "remark": "", "measures": {"Back Body Length": "70", "Chest Circumference": "114", "Sweep Straight": "98", "Neck Width": "18.5", "Front Neck Drop": "10", "Across Shoulder": "52", "CB to SLV Length": "90", "Bicep": "46", "Elbow": "36.5", "Sleeve Opening": "21", "AH Drop": "30", "CB Collar Height": "8.3"}}, {"line": "MT", "ref": "TX-MT172-64", "uid": "TX-MT172-64", "gender": "UNISEX", "pom": "", "fit": "SEMI-OVER", "remark": "세미오버 바디", "measures": {"Back Body Length": "68", "Chest Circumference": "116", "Sweep Straight": "98", "Neck Width": "20", "Front Neck Drop": "10.5", "Across Shoulder": "52", "CB to SLV Length": "87", "Bicep": "47", "Elbow": "36", "Sleeve Opening": "21", "AH Drop": "31", "CB Collar Height": "2"}}, {"line": "MT", "ref": "TX-MT101-61", "uid": "TX-MT101-61", "gender": "UNISEX", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "66.5", "Chest Circumference": "120", "Sweep Straight": "118", "Neck Width": "102", "Front Neck Drop": "20.5", "Across Shoulder": "54", "CB to SLV Length": "88", "Bicep": "48", "Elbow": "39", "Sleeve Opening": "21", "AH Drop": "31.5"}}, {"line": "MT", "ref": "TM-MT171-64", "uid": "TM-MT171-64", "gender": "MEN", "pom": "", "fit": "SEMI-OVER", "remark": "버터쭈리", "measures": {"Back Body Length": "69", "Chest Circumference": "118", "Sweep Straight": "104", "Neck Width": "20.5", "Front Neck Drop": "9.5", "Across Shoulder": "53.5", "CB to SLV Length": "92", "Bicep": "47", "Elbow": "37", "Sleeve Opening": "20", "AH Drop": "31.5", "CB Collar Height": "6.5"}}, {"line": "HD", "ref": "TX-HD160-66", "uid": "TX-HD160-66", "gender": "UNISEX", "pom": "", "fit": "SEMI-OVER", "remark": "기모쭈리", "measures": {"Back Body Length": "67", "Chest Circumference": "122", "Sweep Straight": "102", "Neck Width": "24", "Front Neck Drop": "8.5", "Across Shoulder": "54", "CB to SLV Length": "88", "Bicep": "51", "Elbow": "40", "Sleeve Opening": "21", "AH Drop": "32", "Hood Height": "35", "Hood Width": "26"}}, {"line": "MT", "ref": "TX-MT140-54", "uid": "TX-MT140-54", "gender": "UNISEX", "pom": "", "fit": "SEMI-OVER", "remark": "라글란", "measures": {"Back Body Length": "69", "Chest Circumference": "122", "Sweep Straight": "100", "Neck Width": "20", "Front Neck Drop": "10.5", "CB to SLV Length": "88", "Bicep": "49", "Elbow": "38.5", "Sleeve Opening": "20", "AH Drop": "31", "CB Collar Height": "2"}}, {"line": "MT", "ref": "TM-MT150-56", "uid": "TM-MT150-56", "gender": "MEN", "pom": "", "fit": "OVER", "remark": "클래식 기모", "measures": {"Back Body Length": "69.5", "Chest Circumference": "125", "Sweep Straight": "120", "Neck Width": "19.5", "Front Neck Drop": "9.5", "Across Shoulder": "54", "CB to SLV Length": "90", "Bicep": "48", "Elbow": "37", "Sleeve Opening": "21", "AH Drop": "32.5", "CB Collar Height": "6.5"}}, {"line": "HD", "ref": "TX-HD010-61", "uid": "TX-HD010-61", "gender": "UNISEX", "pom": "", "fit": "OVER", "remark": "현대카드 콜라보", "measures": {"Back Body Length": "65", "Chest Circumference": "126", "Sweep Straight": "102", "Neck Width": "26", "Front Neck Drop": "8.5", "Across Shoulder": "57", "CB to SLV Length": "87", "Bicep": "52", "Elbow": "42", "Sleeve Opening": "22", "Hood Height": "35", "Hood Width": "26"}}, {"line": "MT", "ref": "TX-MT152-51", "uid": "TX-MT152-51", "gender": "UNISEX", "pom": "", "fit": "OVER", "remark": "", "measures": {"Back Body Length": "69", "Chest Circumference": "132", "Sweep Straight": "98", "Neck Width": "20.5", "Front Neck Drop": "10.5", "Across Shoulder": "62", "CB to SLV Length": "90", "Bicep": "51", "Elbow": "43", "Sleeve Opening": "22", "AH Drop": "33.5", "CB Collar Height": "2.5"}}, {"line": "MT", "ref": "TW-MT151-64", "uid": "TW-MT151-64", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "모달라이크", "measures": {"Back Body Length": "46", "Chest Circumference": "94", "Sweep Straight": "76", "Neck Width": "17", "Front Neck Drop": "14", "Across Shoulder": "46", "CB to SLV Length": "79", "Bicep": "36", "Elbow": "30.5", "Sleeve Opening": "19", "AH Drop": "25", "CB Collar Height": "2"}}, {"line": "MT", "ref": "TW-MT142-64", "uid": "TW-MT142-64", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "에어쿠쉬", "measures": {"Back Body Length": "53.5", "Chest Circumference": "104", "Sweep Straight": "78", "Neck Width": "20", "Front Neck Drop": "7", "Across Shoulder": "50", "CB to SLV Length": "80", "Bicep": "45", "Elbow": "36", "Sleeve Opening": "20", "AH Drop": "29", "CB Collar Height": "6.5"}}, {"line": "MT", "ref": "TW-MT645-56", "uid": "TW-MT645-56", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "플리스 풀오버", "measures": {"Back Body Length": "52", "Chest Circumference": "104", "Sweep Straight": "80", "Front Neck Drop": "8", "Across Shoulder": "47", "CB to SLV Length": "81", "Bicep": "39.5", "Elbow": "31", "Sleeve Opening": "20", "AH Drop": "26", "CB Collar Height": "6.5"}}, {"line": "MT", "ref": "TW-MT101-54", "uid": "TW-MT101-54", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "더블니트, 드롭숄더", "measures": {"Back Body Length": "46", "Chest Circumference": "106", "Sweep Straight": "95", "Neck Width": "22", "Front Neck Drop": "9.5", "Across Shoulder": "58", "CB to SLV Length": "82", "Bicep": "40", "Elbow": "35.5", "Sleeve Opening": "19", "AH Drop": "29", "CB Collar Height": "3"}}, {"line": "MT", "ref": "TW-MT101-61", "uid": "TW-MT101-61", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "쿠쉬라이트 프렌치 보트넥", "measures": {"Back Body Length": "48", "Chest Circumference": "106", "Sweep Straight": "79", "Neck Width": "34", "Front Neck Drop": "6", "Across Shoulder": "50", "CB to SLV Length": "79", "Bicep": "43", "Elbow": "36", "Sleeve Opening": "19", "AH Drop": "27.5", "CB Collar Height": "1"}}, {"line": "MT", "ref": "TW-MT640-54", "uid": "TW-MT640-54", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "53", "Chest Circumference": "108", "Sweep Straight": "80", "Neck Width": "19", "Front Neck Drop": "7.5", "Across Shoulder": "50", "CB to SLV Length": "82", "Bicep": "44", "Elbow": "36", "Sleeve Opening": "20", "AH Drop": "28.5", "CB Collar Height": "12.5"}}, {"line": "MT", "ref": "TW-MT171-64", "uid": "TW-MT171-64", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "버터쭈리", "measures": {"Back Body Length": "55", "Chest Circumference": "104", "Sweep Straight": "84", "Neck Width": "17", "Front Neck Drop": "8.8", "Across Shoulder": "50", "CB to SLV Length": "81", "Bicep": "45", "Elbow": "36", "Sleeve Opening": "20", "AH Drop": "29", "CB Collar Height": "6.5"}}, {"line": "MT", "ref": "TW-MT150-56", "uid": "TW-MT150-56", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "클래식 기모", "measures": {"Back Body Length": "57.5", "Chest Circumference": "110", "Sweep Straight": "84", "Neck Width": "18", "Front Neck Drop": "9.5", "Across Shoulder": "51", "CB to SLV Length": "82", "Bicep": "46", "Elbow": "35", "Sleeve Opening": "18", "AH Drop": "30", "CB Collar Height": "8"}}, {"line": "MT", "ref": "TW-MT102-61", "uid": "TW-MT102-61", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "쿠쉬라이트", "measures": {"Back Body Length": "52", "Chest Circumference": "110", "Sweep Straight": "92", "Neck Width": "18.5", "Front Neck Drop": "9", "Across Shoulder": "50", "CB to SLV Length": "78.5", "Bicep": "44", "Elbow": "34", "Sleeve Opening": "19", "AH Drop": "29", "CB Collar Height": "2"}}, {"line": "HD", "ref": "TW-HD640-54", "uid": "TW-HD640-54", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "", "measures": {"Back Body Length": "53.5", "Chest Circumference": "112", "Sweep Straight": "82", "Neck Width": "19", "Front Neck Drop": "10.5", "Across Shoulder": "52", "CB to SLV Length": "81.5", "Bicep": "46", "Elbow": "35.5", "Sleeve Opening": "20", "AH Drop": "28.5", "Hood Height": "34", "Hood Width": "25"}}, {"line": "MT", "ref": "TW-MT152-51", "uid": "TW-MT152-51", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "", "measures": {"Back Body Length": "54.5", "Chest Circumference": "113", "Sweep Straight": "80", "Neck Width": "17.5", "Front Neck Drop": "9.5", "Across Shoulder": "54", "CB to SLV Length": "81.5", "Bicep": "47.5", "Elbow": "36.5", "Sleeve Opening": "20", "AH Drop": "29.5", "CB Collar Height": "2"}}, {"line": "MT", "ref": "TX-MT182-66", "uid": "TX-MT182-66", "gender": "UNISEX", "pom": "", "fit": "OVER", "remark": "플리스, 떰홀", "measures": {"Back Body Length": "54", "Chest Circumference": "112", "Sweep Straight": "110", "Neck Width": "25", "CB to SLV Length": "86", "Bicep": "45", "Elbow": "37", "Sleeve Opening": "22", "AH Drop": "29"}}, {"line": "MT", "ref": "TW-MT190-56", "uid": "TW-MT190-56", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "플리스, 떰홀", "measures": {"Back Body Length": "61.5", "Chest Circumference": "116", "Sweep Straight": "112", "Neck Width": "18", "Front Neck Drop": "7.5", "Across Shoulder": "50", "CB to SLV Length": "85", "Bicep": "45", "Elbow": "39", "Sleeve Opening": "20", "AH Drop": "29.5", "CB Collar Height": "12.5"}}, {"line": "PQ", "ref": "TM-PQ109-61", "uid": "TM-PQ109-61", "gender": "MEN", "pom": "", "fit": "REGULAR", "remark": "", "measures": {"Back Body Length": "70", "Chest Circumference": "106", "Sweep Straight": "104", "Neck Width": "17.5", "Front Neck Drop": "9.5", "Across Shoulder": "45", "CB to SLV Length": "45.5", "Bicep": "40.5", "Sleeve Opening": "34", "AH Drop": "27", "CB Collar Height": "7"}}, {"line": "PQ", "ref": "TM-PQ112-64", "uid": "TM-PQ112-64", "gender": "MEN", "pom": "", "fit": "REGULAR", "remark": "뎅깡", "measures": {"Back Body Length": "70", "Chest Circumference": "106", "Sweep Straight": "104", "Neck Width": "17.5", "Front Neck Drop": "9.5", "Across Shoulder": "45", "CB to SLV Length": "85.5", "Bicep": "40", "Elbow": "32", "Sleeve Opening": "22", "AH Drop": "26", "CB Collar Height": "7"}}, {"line": "PQ", "ref": "TM-PQ162-61", "uid": "TM-PQ162-61", "gender": "MEN", "pom": "", "fit": "REGULAR", "remark": "레이피케", "measures": {"Back Body Length": "70", "Chest Circumference": "110", "Sweep Straight": "108", "Neck Width": "18", "Front Neck Drop": "9.8", "Across Shoulder": "48", "CB to SLV Length": "46", "Bicep": "42.5", "Sleeve Opening": "37.5 / 33.5 (요꼬)", "AH Drop": "28", "CB Collar Height": "7.5"}}, {"line": "PQ", "ref": "TM-PQ150-54", "uid": "TM-PQ150-54", "gender": "MEN", "pom": "", "fit": "SEMI-OVER", "remark": "랄프로렌, 소매산 높음", "measures": {"Back Body Length": "73 (앞뒤편차 1.5)", "Chest Circumference": "115", "Sweep Straight": "113", "Neck Width": "18", "Front Neck Drop": "7.5", "Across Shoulder": "48", "CB to SLV Length": "48.5", "Bicep": "39", "Sleeve Opening": "34", "AH Drop": "27.5", "CB Collar Height": "7"}}, {"line": "PQ", "ref": "TM-PQ105-63", "uid": "TM-PQ105-63", "gender": "MEN", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "72", "Chest Circumference": "115", "Sweep Straight": "113", "Neck Width": "17.5", "Front Neck Drop": "9.5", "Across Shoulder": "50", "CB to SLV Length": "48.5", "Bicep": "44", "Sleeve Opening": "38", "AH Drop": "29", "CB Collar Height": "8.5"}}, {"line": "PQ", "ref": "TX-PQ140-54", "uid": "TX-PQ140-54", "gender": "UNISEX", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "73", "Chest Circumference": "115", "Sweep Straight": "113", "Neck Width": "18", "Front Neck Drop": "7.5", "Across Shoulder": "48", "CB to SLV Length": "91", "Bicep": "41", "Elbow": "34", "Sleeve Opening": "20", "AH Drop": "27.5", "CB Collar Height": "7"}}, {"line": "PQ", "ref": "TM-PQ108-51", "uid": "TM-PQ108-51", "gender": "MEN", "pom": "", "fit": "OVER", "remark": "모던폴로", "measures": {"Back Body Length": "74", "Chest Circumference": "120", "Sweep Straight": "118", "Neck Width": "19", "Front Neck Drop": "10", "Across Shoulder": "54", "CB to SLV Length": "49.5", "Bicep": "46", "Sleeve Opening": "37", "AH Drop": "30.5", "CB Collar Height": "7.2"}}, {"line": "PQ", "ref": "TX-PQ150-54", "uid": "TX-PQ150-54", "gender": "UNISEX", "pom": "", "fit": "OVER", "remark": "랄프로렌, 소매산 높음", "measures": {"Back Body Length": "73", "Chest Circumference": "120", "Sweep Straight": "120", "Neck Width": "18", "Front Neck Drop": "10", "Across Shoulder": "50", "CB to SLV Length": "91", "Bicep": "39", "Elbow": "35", "Sleeve Opening": "21", "AH Drop": "27.5", "CB Collar Height": "7.5"}}, {"line": "PQ", "ref": "TW-PQ169-63", "uid": "TW-PQ169-63", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "립 골지, 패드 내장", "measures": {"Back Body Length": "42", "Chest Circumference": "76", "Sweep Straight": "65", "Neck Width": "16", "Front Neck Drop": "8.5", "Across Shoulder": "25", "AH Drop": "21", "CB Collar Height": "6.5"}}, {"line": "PQ", "ref": "TW-PQ111-64", "uid": "TW-PQ111-64", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "뉴 피케", "measures": {"Back Body Length": "47", "Chest Circumference": "86", "Sweep Straight": "82", "Neck Width": "17", "Front Neck Drop": "8", "Across Shoulder": "36.5", "CB to SLV Length": "34.5", "Bicep": "29.5", "Sleeve Opening": "28", "AH Drop": "22", "CB Collar Height": "7.5"}}, {"line": "PQ", "ref": "TW-PQ164-63", "uid": "TW-PQ164-63", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "", "measures": {"Back Body Length": "51", "Chest Circumference": "86", "Sweep Straight": "82", "Neck Width": "16", "Front Neck Drop": "8.5", "Across Shoulder": "32.5", "AH Drop": "22 / 19.3", "CB Collar Height": "7"}}, {"line": "PQ", "ref": "TW-PQ110-53", "uid": "TW-PQ110-53", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "", "measures": {"Back Body Length": "57", "Chest Circumference": "88", "Sweep Straight": "92", "Neck Width": "15.5", "Front Neck Drop": "8.5", "Across Shoulder": "34.5", "AH Drop": "22", "CB Collar Height": "6.3"}}, {"line": "PQ", "ref": "TW-PQ109-64", "uid": "TW-PQ109-64", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "", "measures": {"Back Body Length": "57", "Chest Circumference": "88", "Waist": "84", "Sweep Straight": "92", "Neck Width": "15.5", "Front Neck Drop": "8.5", "Across Shoulder": "38", "CB to SLV Length": "36", "Bicep": "31", "Sleeve Opening": "29", "AH Drop": "22.5", "CB Collar Height": "6.5"}}, {"line": "PQ", "ref": "TW-PQ112-64", "uid": "TW-PQ112-64", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "뎅깡", "measures": {"Back Body Length": "57", "Chest Circumference": "90", "Waist": "88", "Sweep Straight": "92", "Neck Width": "15.5", "Front Neck Drop": "8.5", "Across Shoulder": "36", "CB to SLV Length": "78", "Bicep": "31", "Elbow": "25", "Sleeve Opening": "19", "AH Drop": "22.5", "CB Collar Height": "6.3"}}, {"line": "PQ", "ref": "TW-PQ163-63", "uid": "TW-PQ163-63", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "클래식 60th 폴로", "measures": {"Back Body Length": "54", "Chest Circumference": "92", "Waist": "88", "Sweep Straight": "93", "Neck Width": "15.5", "Front Neck Drop": "8.5", "Across Shoulder": "37", "CB to SLV Length": "36.5", "Bicep": "32", "Sleeve Opening": "27", "AH Drop": "22.5", "CB Collar Height": "7"}}, {"line": "PQ", "ref": "TW-PQ103-61", "uid": "TW-PQ103-61", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "더블니트", "measures": {"Back Body Length": "49", "Chest Circumference": "97", "Sweep Straight": "78 (이밴드)", "Neck Width": "17.5", "Front Neck Drop": "15", "Across Shoulder": "45", "CB to SLV Length": "81", "Bicep": "36", "Sleeve Opening": "19", "AH Drop": "26", "CB Collar Height": "8"}}, {"line": "PQ", "ref": "TW-PQ105-63", "uid": "TW-PQ105-63", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "카라포인트 폴로", "measures": {"Back Body Length": "58.5", "Chest Circumference": "98", "Sweep Straight": "96", "Neck Width": "16", "Front Neck Drop": "8", "Across Shoulder": "40", "CB to SLV Length": "40", "Bicep": "35.5", "Sleeve Opening": "31", "AH Drop": "24.5"}}, {"line": "PQ", "ref": "TW-PQ150-54", "uid": "TW-PQ150-54", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "랄프로렌, 소매산높음", "measures": {"Back Body Length": "58", "Chest Circumference": "95", "Sweep Straight": "95", "Neck Width": "16", "Front Neck Drop": "8", "Across Shoulder": "40.5", "CB to SLV Length": "37.5", "Bicep": "30.5", "Sleeve Opening": "27", "AH Drop": "24", "CB Collar Height": "6.5"}}, {"line": "PQ", "ref": "TW-PQ108-51", "uid": "TW-PQ108-51", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "모던폴로", "measures": {"Back Body Length": "54.5", "Chest Circumference": "99", "Sweep Straight": "103", "Neck Width": "15", "Front Neck Drop": "7.5", "Across Shoulder": "45", "CB to SLV Length": "44", "Bicep": "38", "Sleeve Opening": "30", "AH Drop": "27", "CB Collar Height": "6.3"}}, {"line": "PQ", "ref": "TW-PQ001-51", "uid": "TW-PQ001-51", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "SATUR COLLAB", "measures": {"Back Body Length": "53.5", "Chest Circumference": "100", "Sweep Straight": "98", "Neck Width": "16", "Front Neck Drop": "8.5", "Across Shoulder": "43", "CB to SLV Length": "42", "Bicep": "38", "Sleeve Opening": "30", "AH Drop": "25", "CB Collar Height": "6"}}, {"line": "PQ", "ref": "TW-PQ141-54", "uid": "TW-PQ141-54", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "", "measures": {"Back Body Length": "60", "Chest Circumference": "104", "Sweep Straight": "102", "Neck Width": "16", "Front Neck Drop": "9", "Across Shoulder": "44", "CB to SLV Length": "81", "Bicep": "41", "Elbow": "32", "Sleeve Opening": "21", "AH Drop": "27", "CB Collar Height": "8"}}, {"line": "PQ", "ref": "TW-PQ140-54", "uid": "TW-PQ140-54", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "", "measures": {"Back Body Length": "54", "Chest Circumference": "115", "Sweep Straight": "114", "Neck Width": "16", "Front Neck Drop": "9.5", "Across Shoulder": "49", "CB to SLV Length": "81.5", "Bicep": "40.5", "Elbow": "33", "Sleeve Opening": "19", "AH Drop": "27.5", "CB Collar Height": "8"}}, {"line": "RL", "ref": "TM-RL183-54", "uid": "TM-RL183-54", "gender": "MEN", "pom": "", "fit": "REGULAR", "remark": "", "measures": {"Back Body Length": "68.5", "Chest Circumference": "110", "Sweep Straight": "108", "Neck Width": "19.5", "Front Neck Drop": "11", "Across Shoulder": "45", "CB to SLV Length": "86", "Bicep": "42", "Elbow": "34.5", "Sleeve Opening": "22.5", "AH Drop": "28", "Neck Trim Height": "1.8"}}, {"line": "RL", "ref": "TM-RL640-44", "uid": "TM-RL640-44", "gender": "MEN", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "72.5", "Chest Circumference": "120", "Sweep Straight": "115", "Neck Width": "20", "Front Neck Drop": "11", "Across Shoulder": "51", "CB to SLV Length": "89", "Bicep": "48.5", "Elbow": "38", "Sleeve Opening": "21", "AH Drop": "30", "Neck Trim Height": "2"}}, {"line": "RL", "ref": "TW-RL120-64", "uid": "TW-RL120-64", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "나일론 스판 저지", "measures": {"Back Body Length": "38 (CROP)", "Chest Circumference": "76.5", "Sweep Straight": "63 (제원단 밴드)", "Neck Width": "17", "Front Neck Drop": "8.5", "Across Shoulder": "36 (SET IN)", "CB to SLV Length": "76", "Bicep": "30.5", "Elbow": "23", "Sleeve Opening": "19", "AH Drop": "20.5", "Neck Trim Height": "1.2"}}, {"line": "RL", "ref": "TW-RL121-64", "uid": "TW-RL121-64", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "", "measures": {"Back Body Length": "50", "Chest Circumference": "78", "Sweep Straight": "80", "Neck Width": "17", "Front Neck Drop": "8.5", "CB to SLV Length": "78", "Bicep": "29", "Elbow": "21", "Sleeve Opening": "19", "AH Drop": "21"}}, {"line": "RL", "ref": "TW-RL183-54", "uid": "TW-RL183-54", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "", "measures": {"Back Body Length": "59", "Chest Circumference": "85", "Sweep Straight": "90.5", "Neck Width": "17.5", "Front Neck Drop": "9", "Across Shoulder": "36", "CB to SLV Length": "79", "Bicep": "32", "Elbow": "26", "Sleeve Opening": "20", "AH Drop": "21.5", "Neck Trim Height": "1.5"}}, {"line": "RL", "ref": "TW-RL161-61", "uid": "TW-RL161-61", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "", "measures": {"Back Body Length": "53.5", "Chest Circumference": "86", "Sweep Straight": "89", "Neck Width": "17", "Front Neck Drop": "9.6", "Across Shoulder": "37", "CB to SLV Length": "79", "Bicep": "32.5", "Elbow": "26", "Sleeve Opening": "20", "AH Drop": "22", "Neck Trim Height": "1.8"}}, {"line": "RL", "ref": "TW-RL640-44", "uid": "TW-RL640-44", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "46 (CROP)", "Chest Circumference": "100", "Sweep Straight": "98", "Neck Width": "17", "Front Neck Drop": "9", "Across Shoulder": "44", "CB to SLV Length": "79", "Bicep": "36", "Elbow": "29", "Sleeve Opening": "21", "AH Drop": "23", "Neck Trim Height": "1.8"}}, {"line": "TR", "ref": "TM-TR102-64", "uid": "TM-TR102-64", "gender": "MEN", "pom": "", "fit": "REGULAR", "remark": "다마린도", "measures": {"Back Body Length": "66", "Chest Circumference": "110", "Sweep Straight": "98", "Neck Width": "18", "Front Neck Drop": "9.5", "Across Shoulder": "45", "CB to SLV Length": "87", "Upper Arm": "40.5", "Elbow": "32.5", "Sleeve Opening": "20", "Armhole Depth": "27.5", "CB Collar Height": "6"}}, {"line": "TR", "ref": "TM-TR102-61", "uid": "TM-TR102-61", "gender": "MEN", "pom": "", "fit": "REGULAR", "remark": "쿠쉬라이트", "measures": {"Back Body Length": "68", "Chest Circumference": "112", "Sweep Straight": "98", "Neck Width": "18", "Front Neck Drop": "9.5", "CB to SLV Length": "87.5", "Upper Arm": "44.5", "Elbow": "36", "Sleeve Opening": "21", "Armhole Depth": "30", "CB Collar Height": "6"}}, {"line": "TR", "ref": "TX-TR600-44", "uid": "TX-TR600-44", "gender": "UNISEX", "pom": "", "fit": "REGULAR", "remark": "쭈리", "measures": {"Back Body Length": "69", "Chest Circumference": "114", "Sweep Straight": "98", "Neck Width": "22", "Front Neck Drop": "10", "Across Shoulder": "49", "CB to SLV Length": "91", "Upper Arm": "46", "Elbow": "37", "Sleeve Opening": "21", "Armhole Depth": "29", "Hood - Height": "36.5", "Hood - Width": "29"}}, {"line": "TR", "ref": "TM-TR160-61", "uid": "TM-TR160-61", "gender": "MEN", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "67", "Chest Circumference": "120", "Sweep Straight": "104", "Neck Width": "22", "Front Neck Drop": "11", "Across Shoulder": "50", "CB to SLV Length": "91", "Upper Arm": "45", "Elbow": "38", "Sleeve Opening": "23", "Armhole Depth": "28.5", "Hood - Height": "36", "Hood - Width": "29"}}, {"line": "TR", "ref": "TX-TR103-51", "uid": "TX-TR103-51", "gender": "UNISEX", "pom": "", "fit": "OVER", "remark": "모던트랙", "measures": {"Back Body Length": "71", "Chest Circumference": "128", "Sweep Straight": "92", "Neck Width": "19", "Front Neck Drop": "10", "Across Shoulder": "54", "CB to SLV Length": "91", "Upper Arm": "48", "Elbow": "39", "Sleeve Opening": "21", "Armhole Depth": "33", "CB Collar Height": "6"}}, {"line": "TR", "ref": "TX-TR609-46", "uid": "TX-TR609-46", "gender": "UNISEX", "pom": "", "fit": "OVER", "remark": "기모쭈리", "measures": {"Back Body Length": "69", "Chest Circumference": "126", "Sweep Straight": "102", "Neck Width": "22", "Front Neck Drop": "11", "Across Shoulder": "56.5", "CB to SLV Length": "88", "Upper Arm": "49", "Elbow": "39", "Sleeve Opening": "22", "Armhole Depth": "35", "Hood - Height": "37", "Hood - Width": "28.5"}}, {"line": "TR", "ref": "TW-TR120-44", "uid": "TW-TR120-44", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "", "measures": {"Back Body Length": "57", "Chest Circumference": "81", "Sweep Straight": "87", "Neck Width": "16", "Front Neck Drop": "8", "Across Shoulder": "36", "CB to SLV Length": "82", "Upper Arm": "28", "Elbow": "23", "Sleeve Opening": "20", "Armhole Depth": "23", "CB Collar Height": "5"}}, {"line": "TR", "ref": "TW-TR130-64", "uid": "TW-TR130-64", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "", "measures": {"Back Body Length": "49", "Chest Circumference": "80", "Sweep Straight": "76", "Neck Width": "17", "Front Neck Drop": "8", "Across Shoulder": "35.5", "CB to SLV Length": "78", "Upper Arm": "28", "Elbow": "22", "Sleeve Opening": "19", "Armhole Depth": "21.5", "CB Collar Height": "8"}}, {"line": "TR", "ref": "TW-TR151-64", "uid": "TW-TR151-64", "gender": "WOMEN", "pom": "", "fit": "SLIM", "remark": "모달라이크", "measures": {"Back Body Length": "52", "Chest Circumference": "86", "Sweep Straight": "76", "Neck Width": "18", "Front Neck Drop": "8.5", "Across Shoulder": "38", "CB to SLV Length": "80", "Upper Arm": "32", "Elbow": "24", "Sleeve Opening": "19", "Armhole Depth": "23.5", "Hood - Height": "34", "Hood - Width": "25"}}, {"line": "TR", "ref": "TW-TR102-51", "uid": "TW-TR102-51", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "다마린도", "measures": {"Back Body Length": "52", "Chest Circumference": "92", "Sweep Straight": "76", "Neck Width": "16.5", "Front Neck Drop": "8", "Across Shoulder": "37.5", "CB to SLV Length": "79", "Upper Arm": "33.5", "Elbow": "27", "Sleeve Opening": "19", "Armhole Depth": "23", "CB Collar Height": "5"}}, {"line": "TR", "ref": "TW-TR151-51", "uid": "TW-TR151-51", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "모달라이크", "measures": {"Back Body Length": "52", "Chest Circumference": "93", "Sweep Straight": "76", "Neck Width": "17.5", "Front Neck Drop": "9", "Across Shoulder": "38", "CB to SLV Length": "81.5", "Upper Arm": "33.5", "Elbow": "26.5", "Sleeve Opening": "19.5", "Armhole Depth": "22.5", "Hood - Height": "34", "Hood - Width": "25"}}, {"line": "TR", "ref": "TW-TR172-64", "uid": "TW-TR172-64", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "버터쭈리", "measures": {"Back Body Length": "53", "Chest Circumference": "94", "Sweep Straight": "68", "Neck Width": "19", "Front Neck Drop": "9.5", "Across Shoulder": "40", "CB to SLV Length": "82", "Upper Arm": "43.5", "Elbow": "35", "Sleeve Opening": "19", "Armhole Depth": "28", "Hood - Height": "34.5", "Hood - Width": "25"}}, {"line": "TR", "ref": "TW-TR182-66", "uid": "TW-TR182-66", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "플리스", "measures": {"Back Body Length": "52.5", "Chest Circumference": "95", "Sweep Straight": "95", "Neck Width": "21", "Front Neck Drop": "7", "Across Shoulder": "51", "CB to SLV Length": "79", "Upper Arm": "43.5", "Elbow": "36", "Sleeve Opening": "19", "Armhole Depth": "29", "Hood - Height": "33.5", "Hood - Width": "26.5"}}, {"line": "TR", "ref": "TW-TR141-64", "uid": "TW-TR141-64", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "쿠쉬라이트", "measures": {"Back Body Length": "51.5", "Chest Circumference": "97", "Sweep Straight": "76", "Neck Width": "16", "Front Neck Drop": "10.5", "CB to SLV Length": "80", "Upper Arm": "42", "Elbow": "36", "Sleeve Opening": "19", "Armhole Depth": "29", "CB Collar Height": "9"}}, {"line": "TR", "ref": "TW-TR107-61", "uid": "TW-TR107-61", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "쿠쉬라이트 프렌치", "measures": {"Back Body Length": "52", "Chest Circumference": "98", "Sweep Straight": "66", "Neck Width": "21", "Front Neck Drop": "9.5", "Across Shoulder": "38.5", "CB to SLV Length": "81", "Upper Arm": "44", "Elbow": "36.5", "Sleeve Opening": "18", "Armhole Depth": "31", "Hood - Height": "34.5", "Hood - Width": "26.5"}}, {"line": "TR", "ref": "TW-TR160-61", "uid": "TW-TR160-61", "gender": "WOMEN", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "52", "Chest Circumference": "102", "Sweep Straight": "84", "Neck Width": "19", "Front Neck Drop": "8", "Across Shoulder": "44", "CB to SLV Length": "82", "Upper Arm": "41.5", "Elbow": "32.5", "Sleeve Opening": "20", "Armhole Depth": "25", "Hood - Height": "34", "Hood - Width": "25"}}, {"line": "TR", "ref": "TW-TR191-56", "uid": "TW-TR191-56", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "", "measures": {"Back Body Length": "53", "Chest Circumference": "110", "Sweep Straight": "92", "Neck Width": "19.5", "Front Neck Drop": "7", "CB to SLV Length": "81", "Upper Arm": "42.5", "Elbow": "37", "Sleeve Opening": "19", "Hood - Height": "34.5", "Hood - Width": "26"}}, {"line": "WJ", "ref": "TM-WJ207-43", "uid": "TM-WJ207-43", "gender": "MEN", "pom": "", "fit": "REGULAR", "remark": "초경량", "measures": {"Back Body Length": "68", "Chest Circumference": "114", "Sweep Straight": "101.5 (울밴드)", "Neck Width": "18.5", "Front Neck Drop": "10.5", "Across Shoulder": "47", "CB to SLV Length": "91", "Upper Arm": "49", "Elbow": "37", "Sleeve Opening": "22", "Armhole Depth": "29", "CB Collar Height": "6"}}, {"line": "WJ", "ref": "TM-WJ206-44", "uid": "TM-WJ206-44", "gender": "MEN", "pom": "", "fit": "REGULAR", "remark": "매쉬 안감", "measures": {"Back Body Length": "68.5", "Chest Circumference": "118", "Sweep Straight": "112", "Neck Width": "20.5", "Front Neck Drop": "11", "Across Shoulder": "48", "CB to SLV Length": "91", "Upper Arm": "50", "Elbow": "40", "Sleeve Opening": "22", "Armhole Depth": "29.5", "Hood - Height": "36.5", "Hood - Width": "28"}}, {"line": "WJ", "ref": "TX-WJ296-61", "uid": "TX-WJ296-61", "gender": "UNISEX", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "66.5", "Chest Circumference": "124", "Sweep Straight": "100", "Neck Width": "20", "Front Neck Drop": "10", "Across Shoulder": "50", "CB to SLV Length": "89", "Upper Arm": "49", "Elbow": "40", "Sleeve Opening": "22", "Armhole Depth": "32", "CB Collar Height": "4.5"}}, {"line": "WJ", "ref": "TX-WJ262-61", "uid": "TX-WJ262-61", "gender": "UNISEX", "pom": "", "fit": "SEMI-OVER", "remark": "프레쉬닷", "measures": {"Back Body Length": "70", "Chest Circumference": "120", "Sweep Straight": "118", "Neck Width": "19", "Front Neck Drop": "9.5", "Across Shoulder": "50", "CB to SLV Length": "51", "Upper Arm": "48.5", "Sleeve Opening": "43", "Armhole Depth": "31", "CB Collar Height": "6"}}, {"line": "WJ", "ref": "TX-WJ222-54", "uid": "TX-WJ222-54", "gender": "UNISEX", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "68", "Chest Circumference": "124", "Sweep Straight": "101", "Neck Width": "18", "Front Neck Drop": "9", "Across Shoulder": "54", "CB to SLV Length": "87", "Upper Arm": "52", "Elbow": "42", "Sleeve Opening": "22", "Armhole Depth": "32", "CB Collar Height": "8"}}, {"line": "WJ", "ref": "TM-WJ207-51", "uid": "TM-WJ207-51", "gender": "MEN", "pom": "", "fit": "SEMI-OVER", "remark": "", "measures": {"Back Body Length": "71.5", "Chest Circumference": "122", "Sweep Straight": "119", "Neck Width": "19.5", "Front Neck Drop": "9.5", "Across Shoulder": "52", "CB to SLV Length": "89", "Upper Arm": "50.5", "Elbow": "40", "Sleeve Opening": "22 (이밴드)", "Armhole Depth": "31", "CB Collar Height": "7"}}, {"line": "WJ", "ref": "TX-WJ261-61", "uid": "TX-WJ261-61", "gender": "UNISEX", "pom": "", "fit": "SEMI-OVER", "remark": "프레쉬닷", "measures": {"Back Body Length": "68", "Chest Circumference": "120", "Sweep Straight": "98, 102 (접밴드)", "Neck Width": "20", "Front Neck Drop": "10.5", "Across Shoulder": "54", "CB to SLV Length": "90", "Upper Arm": "48", "Elbow": "40", "Sleeve Opening": "22", "Armhole Depth": "31", "Hood - Height": "37", "Hood - Width": "28"}}, {"line": "WJ", "ref": "TM-WJ208-63", "uid": "TM-WJ208-63", "gender": "MEN", "pom": "", "fit": "SEMI-OVER", "remark": "쿠쉬라이트", "measures": {"Back Body Length": "71", "Chest Circumference": "122", "Sweep Straight": "117", "Neck Width": "19.5", "Front Neck Drop": "9", "CB to SLV Length": "88", "Upper Arm": "43", "Elbow": "38", "Sleeve Opening": "21 (이밴드)", "Armhole Depth": "35", "CB Collar Height": "6"}}, {"line": "WJ", "ref": "TX-WJ202-51", "uid": "TX-WJ202-51", "gender": "UNISEX", "pom": "", "fit": "OVER", "remark": "", "measures": {"Back Body Length": "72", "Chest Circumference": "130", "Sweep Straight": "125", "Neck Width": "19.5", "Front Neck Drop": "10", "Across Shoulder": "55", "CB to SLV Length": "90", "Upper Arm": "51", "Elbow": "41", "Sleeve Opening": "22 (이밴드)", "Armhole Depth": "32", "CB Collar Height": "6"}}, {"line": "WJ", "ref": "TW-WJ207-43", "uid": "TW-WJ207-43", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "초경량", "measures": {"Back Body Length": "54", "Chest Circumference": "96", "Sweep Straight": "90 (울밴드)", "Neck Width": "18", "Front Neck Drop": "9", "Across Shoulder": "39", "CB to SLV Length": "81", "Upper Arm": "38", "Elbow": "32", "Sleeve Opening": "19", "Armhole Depth": "24", "CB Collar Height": "6"}}, {"line": "WJ", "ref": "TW-WJ206-41", "uid": "TW-WJ206-41", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "후드 탈부착", "measures": {"Back Body Length": "53", "Chest Circumference": "100", "Sweep Straight": "96", "Neck Width": "18", "Front Neck Drop": "8.5", "Across Shoulder": "39", "CB to SLV Length": "81", "Upper Arm": "41", "Elbow": "34", "Sleeve Opening": "19", "Armhole Depth": "25", "Hood - Height": "34", "Hood - Width": "25"}}, {"line": "WJ", "ref": "TW-WJ209-63", "uid": "TW-WJ209-63", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "쿠쉬라이트, 경량", "measures": {"Back Body Length": "51", "Chest Circumference": "112", "Sweep Straight": "110", "Front Neck Drop": "8.5", "CB to SLV Length": "79", "Upper Arm": "43", "Elbow": "36.5", "Sleeve Opening": "19", "Armhole Depth": "31", "CB Collar Height": "5"}}, {"line": "WJ", "ref": "TW-WJ260-54", "uid": "TW-WJ260-54", "gender": "WOMEN", "pom": "", "fit": "REGULAR", "remark": "", "measures": {"Back Body Length": "56.5", "Chest Circumference": "110", "Sweep Straight": "104", "Neck Width": "19.5", "Front Neck Drop": "9.5", "Across Shoulder": "47", "CB to SLV Length": "80", "Upper Arm": "45", "Elbow": "37", "Sleeve Opening": "22", "Armhole Depth": "25", "Hood - Height": "35", "Hood - Width": "26"}}, {"line": "WJ", "ref": "TW-WJ208-63", "uid": "TW-WJ208-63", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "쿠쉬라이트, 경량", "measures": {"Back Body Length": "50", "Chest Circumference": "116", "Sweep Straight": "113", "Neck Width": "16.5", "Front Neck Drop": "8.5", "CB to SLV Length": "81", "Upper Arm": "48", "Elbow": "39", "Sleeve Opening": "19", "Armhole Depth": "31.5", "CB Collar Height": "5"}}, {"line": "WJ", "ref": "TW-WJ702-44", "uid": "TW-WJ702-44", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "", "measures": {"Back Body Length": "54", "Chest Circumference": "117", "Sweep Straight": "114", "Neck Width": "18", "Front Neck Drop": "9", "Across Shoulder": "46", "CB to SLV Length": "81", "Upper Arm": "54", "Elbow": "40", "Sleeve Opening": "23", "Armhole Depth": "30", "CB Collar Height": "6"}}, {"line": "WJ", "ref": "TW-WJ264-61", "uid": "TW-WJ264-61", "gender": "WOMEN", "pom": "", "fit": "OVER", "remark": "", "measures": {"Back Body Length": "53.5", "Chest Circumference": "130", "Sweep Straight": "102", "Neck Width": "18", "Front Neck Drop": "8.5", "CB to SLV Length": "43", "Upper Arm": "41", "Sleeve Opening": "38", "Armhole Depth": "25", "CB Collar Height": "8"}}];
+    const safeData = Array.isArray(DATA) ? DATA : [];
+
+    function genderTag(g, ref) {
+        // TX- prefix always shows UNISEX tag regardless of stored gender value
+        const refStr = String(ref || "").toUpperCase();
+        if (refStr.startsWith("TX-")) {
+            return `<span class="tag tag-unisex">UNISEX</span>`;
+        }
+        const cls = g === "WOMEN" ? "tag-women" : "tag-men";
+        const label = g === "WOMEN" ? "WOMEN" : "MEN";
+        return `<span class="tag ${cls}">${label}</span>`;
+    }
+    function fitTag(fit) {
+        const map = {
+            "SLIM":      ["#ede9fe","#6d28d9"],
+            "REGULAR":   ["#f3f4f6","#374151"],
+            "SEMI-OVER": ["#fef3c7","#92400e"],
+            "OVER":      ["#fee2e2","#991b1b"]
+        };
+        if (!map[fit]) return "";
+        return `<span class="tag" style="background:${map[fit][0]};color:${map[fit][1]}">${fit}</span>`;
+    }
+
+    function renderCards(items) {
+        const grid = document.getElementById("grid");
+        document.getElementById("count").textContent = items.length;
+        if (!items.length) {
+            grid.innerHTML = '<div class="empty">검색 결과가 없습니다.</div>';
+            return;
+        }
+        grid.innerHTML = items.map((item, i) => {
+            const m = item.measures;
+            const delay = Math.min(i * 40, 800);
+            return `<div class="card" style="animation-delay:${delay}ms" onclick="openModal('${item.uid || item.ref}')">
+                <div class="card-img">
+                    <img src="images/${item.ref}.png" alt="${item.ref}"
+                         onerror="this.onerror=null;this.parentNode.innerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:12px;&quot;>이미지 없음</div>'">
+                </div>
+                <div class="card-body">
+                    <div class="card-ref">${item.uid || item.ref}</div>
+                    <div class="tags">
+                        ${genderTag(item.gender, item.ref)}
+                        <span class="tag tag-line">${item.line}</span>
+                        ${fitTag(item.fit)}
+                    </div>
+                    <div class="measures">
+                        <div class="measure-item">${m["Chest Circumference"] ? "Chest: <span>"+m["Chest Circumference"]+"</span>" : ""}</div>
+                        <div class="measure-item">${m["Back Body Length"] ? "CB Length: <span>"+m["Back Body Length"]+"</span>" : ""}</div>
+                        <div class="measure-item">${m["Across Shoulder"] ? "Shoulder: <span>"+m["Across Shoulder"]+"</span>" : ""}</div>
+                        <div class="measure-item">${m["CB to SLV Length"] ? "Sleeve: <span>"+m["CB to SLV Length"]+"</span>" : ""}</div>
+                    </div>
+                    ${item.remark ? `<div class="remark">${item.remark}</div>` : ""}
+                </div>
+            </div>`;
+        }).join("");
+    }
+
+    function applyFilter() {
+        const line   = document.getElementById("filter-line").value;
+        const gender = document.getElementById("filter-gender").value;
+        const fit    = document.getElementById("filter-fit").value;
+        const q      = document.getElementById("search-input").value.toLowerCase().trim();
+        renderCards(safeData.filter(item => {
+            const ref = String(item.ref || "").toUpperCase();
+            const isTX = ref.startsWith("TX-");
+            // TX- = UNISEX 태그 표시, 하지만 필터는 MEN으로 동작
+            const effectiveGender = isTX ? "MEN" : item.gender;
+            const genderMatch = !gender || effectiveGender === gender;
+            return genderMatch &&
+                (!line || item.line === line) &&
+                (!fit  || item.fit  === fit)  &&
+                (!q    || (item.uid || item.ref).toLowerCase().includes(q));
+        }));
+    }
+
+    function resetAll() {
+        document.getElementById("filter-line").value   = "";
+        document.getElementById("filter-gender").value = "";
+        document.getElementById("filter-fit").value    = "";
+        document.getElementById("search-input").value  = "";
+        applyFilter();
+    }
+
+    ["filter-line","filter-gender","filter-fit"].forEach(id =>
+        document.getElementById(id).addEventListener("change", applyFilter)
+    );
+    document.getElementById("search-input").addEventListener("input", applyFilter);
+    document.getElementById("search-input").addEventListener("keydown", e => {
+        if (e.key === "Escape") resetAll();
+    });
+
+    // Loading screen → fade out → render cards
+    window.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+            const ls = document.getElementById("loading-screen");
+            ls.classList.add("fade-out");
+            setTimeout(() => { ls.style.display = "none"; }, 500);
+            renderCards(safeData);
+        }, 1100);
+    });
+
+    function openModal(uid) {
+        const item = safeData.find(d => (d.uid || d.ref) === uid);
+        if (!item) return;
+        document.getElementById("modal-ref").textContent = item.uid || item.ref;
+        document.getElementById("modal-img-wrap").innerHTML =
+            `<div class="modal-img"><img src="images/${item.ref}.png" alt="${item.ref}"
+                onerror="this.onerror=null;this.parentNode.innerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#ccc;&quot;>이미지 없음</div>'"></div>`;
+        document.getElementById("modal-remark").textContent = item.remark || "";
+        document.getElementById("modal-tags").innerHTML =
+            genderTag(item.gender, item.ref) +
+            `<span class="tag tag-line">${item.line}</span>` +
+            fitTag(item.fit);
+        document.getElementById("modal-table").innerHTML =
+            Object.entries(item.measures)
+                  .map(([k,v]) => `<tr><td>${k}</td><td>${v}</td></tr>`)
+                  .join("");
+        document.getElementById("modal-overlay").classList.add("open");
+    }
+
+    function closeModal() {
+        document.getElementById("modal-overlay").classList.remove("open");
+    }
+    document.getElementById("modal-overlay").addEventListener("click", e => {
+        if (e.target === document.getElementById("modal-overlay")) closeModal();
+    });
+    document.addEventListener("keydown", e => {
+        if (e.key === "Escape") closeModal();
+    });
+</script>
+</body>
+</html>
