@@ -160,14 +160,14 @@
         .sg-table-wrap { overflow-x: auto; border-radius: 6px; border: 1px solid var(--border); }
         .sg-table { width: 100%; border-collapse: collapse; font-size: 11px; }
         .sg-table thead th {
-            background: #111; color: #fff;
+            background: #fff; color: var(--text-secondary);
             padding: 8px 14px; text-align: center;
             font-family: "Noto Sans", sans-serif;
-            font-size: 10px; font-weight: 600; letter-spacing: 1px;
+            font-size: 10px; font-weight: 700; letter-spacing: 1px;
             white-space: nowrap;
+            border-bottom: 1.5px solid var(--border);
         }
-        .sg-table thead th:first-child { text-align: left; border-radius: 6px 0 0 0; }
-        .sg-table thead th:last-child  { border-radius: 0 6px 0 0; }
+        .sg-table thead th:first-child { text-align: left; }
         .sg-table tbody tr { border-bottom: 1px solid var(--border); }
         .sg-table tbody tr:last-child { border-bottom: none; }
         .sg-table tbody tr:hover { background: var(--off-white); }
@@ -176,10 +176,8 @@
         .fit-pill {
             display: inline-block; font-size: 10px; font-weight: 700;
             padding: 3px 10px; border-radius: 100px;
-            letter-spacing: 0.5px; cursor: pointer;
-            transition: opacity 0.15s;
+            letter-spacing: 0.5px;
         }
-        .fit-pill:hover { opacity: 0.75; }
         .fp-regular   { background: #ccfbf1; color: #0f766e; }
         .fp-semi-over { background: #fef3c7; color: #92400e; }
         .fp-over      { background: #fee2e2; color: #991b1b; }
@@ -454,7 +452,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title"><span class="emoji">👕</span>Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 04월 22일 15:51</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 04월 22일 16:11</div>
 </header>
 
 <!-- CATEGORY TABS -->
@@ -466,7 +464,6 @@
     <button class="cat-tab" onclick="switchTab('RL', this)">RL</button>
     <button class="cat-tab" onclick="switchTab('TR', this)">TR</button>
     <button class="cat-tab" onclick="switchTab('WJ', this)">WJ</button>
-    <button class="cat-tab" onclick="switchTab('TX', this)">TX</button>
 </div>
 
 <!-- LINE SPEC GUIDE 패널 (라인 탭 선택 시만 표시) -->
@@ -596,9 +593,7 @@
     function buildSgTable(group, gender) {
         const lc = group.lineCode || group.line.split(" ")[0];
         const fitCols = group.fits.map(f =>
-            `<th><span class="fit-pill ${FP_CLASS[f.toUpperCase()]||"fp-regular"}"
-                onclick="filterByFit('${f.toUpperCase()}','${gender}')"
-                title="${lc} ${f} 필터">${f}</span></th>`
+            `<th><span class="fit-pill ${FP_CLASS[f.toUpperCase()]||"fp-regular"}">${f}</span></th>`
         ).join("");
         const allowedPoms = ["Chest Circumference", "Back Body Length"];
         const poms = Object.keys(group.measures).filter(p => allowedPoms.includes(p));
@@ -672,12 +667,6 @@
         applyFilter();
     }
 
-    function filterByFit(fit, gender) {
-        document.getElementById("filter-fit").value = fit;
-        if (gender) setGender(gender, document.querySelector(`.gender-btn:nth-child(${gender === "MEN" ? 2 : 3})`));
-        applyFilter();
-        document.getElementById("results-area").scrollIntoView({behavior: "smooth"});
-    }
 
     function resetAll() {
         currentTab    = "ALL";
