@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sergio Tacchini — Bottom Fit Guide</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --white: #ffffff;
+            --off-white: #fafafa;
+            --bg: #ffffff;
+            --border: #e8e8e8;
+            --text-primary: #111111;
+            --text-secondary: #555555;
+            --text-muted: #999999;
+            --accent: #111111;
+            --tag-line-bg: #111111;
+            --tag-line-color: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
+            --radius: 10px;
+        }
+
+        body {
+            font-family: "Noto Sans KR", "Noto Sans", sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: #fff;
+            border-bottom: 1.5px solid var(--border);
+            padding: 22px 40px;
+            display: flex;
+            align-items: baseline;
+            gap: 14px;
+        }
+        .header-brand {
+            font-family: "Noto Sans", sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .header-title {
+            font-family: "Noto Sans", sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+        }
+        .header-title .emoji {
+            font-size: 18px;
+            margin-right: 6px;
+        }
+        .header-meta {
+            margin-left: auto;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+        }
+
+        /* ── LOADING SCREEN ── */
+        #loading-screen {
+            position: fixed; inset: 0;
+            background: #fff;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            transition: opacity 0.5s ease;
+        }
+        #loading-screen.fade-out { opacity: 0; pointer-events: none; }
+        .loading-brand {
+            font-family: "Noto Sans", sans-serif;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+        .loading-title {
+            font-family: "Noto Sans", sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .loading-bar-wrap {
+            width: 160px;
+            height: 2px;
+            background: var(--border);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .loading-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--text-primary);
+            border-radius: 2px;
+            animation: loadBar 0.9s ease forwards;
+        }
+        @keyframes loadBar {
+            0%   { width: 0%; }
+            60%  { width: 75%; }
+            100% { width: 100%; }
+        }
+
+        /* ── CATEGORY TABS ── */
+        .cat-tabs-bar {
+            background: #fff;
+            border-bottom: 1.5px solid var(--border);
+            padding: 0 40px;
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+        }
+        .cat-tab {
+            padding: 14px 24px 12px;
+            font-family: "Noto Sans", sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            cursor: pointer;
+            border: none;
+            border-bottom: 2.5px solid transparent;
+            background: none;
+            transition: color 0.18s, border-color 0.18s;
+        }
+        .cat-tab:hover { color: var(--text-primary); }
+        .cat-tab.active { color: var(--text-primary); border-bottom-color: #111; }
+
+        /* ── SP 기장 가이드 패널 ── */
+        .info-panel {
+            display: none;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 24px 40px;
+        }
+        .info-panel.open { display: block; }
+        .info-panel-title {
+            font-family: "Noto Sans", sans-serif;
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--text-muted); margin-bottom: 16px;
+        }
+        .sp-guide-wrap { display: flex; gap: 32px; flex-wrap: wrap; }
+        .sp-guide-block { }
+        .sp-guide-gender {
+            font-size: 11px; font-weight: 700; letter-spacing: 1px;
+            color: var(--text-secondary); margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+        .sp-guide-table { border-collapse: collapse; font-size: 12px; }
+        .sp-guide-table thead th {
+            background: #111; color: #fff;
+            padding: 7px 20px; text-align: center;
+            font-family: "Noto Sans", sans-serif;
+            font-size: 10px; font-weight: 600; letter-spacing: 1px;
+        }
+        .sp-guide-table thead th:first-child { text-align: left; border-radius: 6px 0 0 0; }
+        .sp-guide-table thead th:last-child  { border-radius: 0 6px 0 0; }
+        .sp-guide-table tbody td {
+            padding: 8px 20px; text-align: center;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary); font-size: 12px;
+        }
+        .sp-guide-table tbody td:first-child {
+            text-align: left; font-weight: 700;
+            color: var(--text-secondary); white-space: nowrap;
+        }
+        .sp-guide-table tbody tr:last-child td { border-bottom: none; }
+        .sp-guide-table tbody tr:hover td { background: var(--off-white); }
+        .sp-guide-note {
+            font-size: 10px; color: var(--text-muted);
+            margin-top: 14px; line-height: 1.7;
+        }
+
+        /* ── SUB FILTERS ── */
+        .sub-filters-bar {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        .gender-toggle {
+            display: flex;
+            border: 1.5px solid var(--border);
+            border-radius: 100px;
+            overflow: hidden;
+        }
+        .gender-btn {
+            padding: 7px 16px;
+            font-family: "Noto Sans", sans-serif;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 1px; text-transform: uppercase;
+            border: none; background: #fff;
+            color: var(--text-muted); cursor: pointer;
+            transition: all 0.18s;
+        }
+        .gender-btn.active { background: #111; color: #fff; }
+        .filter-pill {
+            display: flex; align-items: center; gap: 7px;
+            border: 1.5px solid var(--border);
+            border-radius: 100px;
+            padding: 7px 16px; background: #fff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .filter-pill:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+        }
+        .filter-pill label {
+            font-family: "Noto Sans", sans-serif;
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--text-muted); white-space: nowrap;
+        }
+        .filter-pill select, .filter-pill input {
+            border: none; background: transparent;
+            font-family: "Noto Sans KR", "Noto Sans", sans-serif;
+            font-size: 12px; font-weight: 500;
+            color: var(--text-primary);
+            outline: none; cursor: pointer; min-width: 80px;
+        }
+        .filter-pill input { min-width: 130px; }
+        .filter-pill input::placeholder { color: var(--text-muted); }
+        .btn-reset {
+            background: none; border: 1.5px solid var(--border);
+            border-radius: 100px; padding: 8px 18px;
+            font-family: "Noto Sans", sans-serif;
+            font-size: 10px; font-weight: 600; letter-spacing: 1px;
+            color: var(--text-muted); cursor: pointer;
+            transition: border-color 0.2s, color 0.2s;
+        }
+        .btn-reset:hover { border-color: #aaa; color: #555; }
+
+        /* ── RESULTS AREA ── */
+        /* ── RESULTS AREA ── */
+        .results-area { padding: 0 40px 48px; }
+
+        .count-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 24px 0 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        .count-bar strong { color: var(--text-primary); font-size: 14px; font-weight: 700; }
+
+        /* ── GRID ── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 18px;
+        }
+
+        /* card entrance animation */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            background: #fff;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            cursor: pointer;
+            transition: box-shadow 0.22s, border-color 0.22s, transform 0.22s;
+            animation: fadeUp 0.38s ease both;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #bbb;
+            transform: translateY(-3px);
+        }
+        .card-img {
+            width: 100%;
+            height: 300px;
+            background: var(--off-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-img img {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            object-position: center top;
+            display: block;
+        }
+        .card-body { padding: 14px 16px 16px; }
+        .card-ref {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+        .tag {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+        .tag-line  { background: var(--tag-line-bg); color: var(--tag-line-color); }
+        .tag-men   { background: #e0f2fe; color: #0369a1; }
+        .tag-women { background: #fce7f3; color: #be185d; }
+        .tag-unisex{ background: #ede9fe; color: #6d28d9; }
+
+        .measures { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px; }
+        .measure-item { font-size: 11px; color: var(--text-secondary); }
+        .measure-item span { font-weight: 600; color: var(--text-primary); }
+        .remark {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 9px;
+            border-top: 1px solid var(--border);
+            padding-top: 8px;
+            line-height: 1.5;
+        }
+
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(4px);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            max-width: 720px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 36px;
+            position: relative;
+            animation: fadeUp 0.28s ease;
+        }
+        .modal-close {
+            position: absolute; top: 18px; right: 22px;
+            font-size: 22px; cursor: pointer;
+            color: var(--text-muted);
+            background: none; border: none;
+            transition: color 0.15s;
+        }
+        .modal-close:hover { color: var(--text-primary); }
+        .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+        .modal-img {
+            width: 100%;
+            border-radius: 10px;
+            background: var(--off-white);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-muted); font-size: 13px;
+            min-height: 300px; overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .modal-img img { width: 100%; object-fit: contain; object-position: center top; max-height: 420px; display: block; border-radius: 10px; }
+        .modal-info h2 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+        .modal-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        .modal-table tr td { padding: 6px 8px; font-size: 12px; border-bottom: 1px solid var(--border); }
+        .modal-table tr td:first-child { color: var(--text-muted); width: 55%; }
+        .modal-table tr td:last-child { font-weight: 600; color: var(--text-primary); }
+
+        /* ── EMPTY STATE ── */
+        .empty {
+            grid-column: 1/-1;
+            padding: 60px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        @media(max-width: 640px) {
+            header { padding: 18px 20px; }
+            .cat-tabs-bar { padding: 0 16px; }
+            .cat-tab { padding: 12px 14px 10px; font-size: 10px; }
+            .info-panel { padding: 16px; }
+            .sp-guide-wrap { flex-direction: column; gap: 20px; }
+            .sub-filters-bar { padding: 10px 16px; }
+            .results-area { padding: 0 16px 40px; }
+            .grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .card-img { height: 220px; }
+            .modal-grid { grid-template-columns: 1fr; }
+            .modal { padding: 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+    <div class="loading-brand">Sergio Tacchini</div>
+    <div class="loading-title">👖 Bottom Fit Guide</div>
+    <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+</div>
+
+<header>
+    <div>
+        <div class="header-brand">Sergio Tacchini</div>
+        <div class="header-title"><span class="emoji">👖</span>Bottom Fit Guide</div>
+    </div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 04월 23일 16:10</div>
+</header>
+
+<!-- CATEGORY TABS -->
+<div class="cat-tabs-bar">
+    <button class="cat-tab active" onclick="switchTab('ALL', this)">ALL</button>
+    <button class="cat-tab" onclick="switchTab('SP', this)">SP</button>
+    <button class="cat-tab" onclick="switchTab('PT', this)">PT</button>
+    <button class="cat-tab" onclick="switchTab('SK', this)">SK</button>
+    <button class="cat-tab" onclick="switchTab('LG', this)">LG</button>
+</div>
+
+<!-- SP 기장 가이드 패널 (SP 탭 선택 시만 표시) -->
+<div class="info-panel" id="info-panel"></div>
+
+<!-- SUB FILTERS -->
+<div class="sub-filters-bar">
+    <div class="gender-toggle">
+        <button class="gender-btn active" onclick="setGender('', this)">ALL</button>
+        <button class="gender-btn" onclick="setGender('MEN', this)">MEN</button>
+        <button class="gender-btn" onclick="setGender('WOMEN', this)">WOMEN</button>
+    </div>
+    <div class="filter-pill">
+        <label>Fabric</label>
+        <select id="filter-fabric" onchange="applyFilter()">
+            <option value="">All</option>
+            <option value="JERSEY">JERSEY</option>
+            <option value="WOVEN">WOVEN</option>
+        </select>
+    </div>
+    <div class="filter-pill" id="pill-fit" style="display:none">
+        <label>Fit</label>
+        <select id="filter-fit" onchange="applyFilter()">
+            <option value="">All</option>
+        </select>
+    </div>
+    <div class="filter-pill" id="pill-line-style" style="display:none">
+        <label>Line</label>
+        <select id="filter-line-style" onchange="applyFilter()">
+            <option value="">All</option>
+        </select>
+    </div>
+    <div class="filter-pill">
+        <label>REF</label>
+        <input type="text" id="search-input" placeholder="검색...">
+    </div>
+    <button class="btn-reset" onclick="resetAll()">↺ RESET</button>
+</div>
+
+<!-- RESULTS -->
+<div class="results-area" id="results-area">
+    <div class="count-bar"><strong id="count">0</strong>&nbsp;items</div>
+    <div class="grid" id="grid"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <div class="modal-grid">
+            <div id="modal-img-wrap"></div>
+            <div class="modal-info">
+                <div class="tags" id="modal-tags"></div>
+                <h2 id="modal-ref"></h2>
+                <div id="modal-remark" style="font-size:12px;color:#999;margin-bottom:10px;"></div>
+                <table class="modal-table" id="modal-table"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const DATA = [{"line": "SP", "category": "SHORTS", "ref": "TM-SP103-44", "uid": "TM-SP103-44", "gender": "MEN", "fit": "REGULAR", "fabric": "JERSEY", "line_style": "", "subtype": "", "remark": "쿠션지", "measures": {"Waist": "80", "Low Hip": "110", "Thigh": "70", "Leg Opening": "63", "Inseam": "16.5", "Outseam": "45", "Front Rise": "25.5", "Back Rise": "39"}}, {"line": "SP", "category": "SHORTS", "ref": "TM-SP101-61", "uid": "TM-SP101-61", "gender": "MEN", "fit": "REGULAR", "fabric": "JERSEY", "line_style": "", "subtype": "", "remark": "쿠쉬라이트 프렌치", "measures": {"Waist": "80", "Low Hip": "110", "Thigh": "70", "Leg Opening": "62", "Inseam": "19", "Outseam": "47.5", "Front Rise": "25.5", "Back Rise": "38.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TM-SP103-51", "uid": "TM-SP103-51", "gender": "MEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "", "subtype": "", "remark": "모던트랙", "measures": {"Waist": "80", "Low Hip": "115", "Thigh": "75", "Leg Opening": "66", "Inseam": "28", "Outseam": "58", "Front Rise": "27.5", "Back Rise": "39.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TM-SP203-53", "uid": "TM-SP203-53", "gender": "MEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "컴포트쿨, 2 IN 1", "measures": {"Waist": "78", "Low Hip": "110", "Thigh": "72", "Leg Opening": "65", "Inseam": "13", "Outseam": "41", "Front Rise": "25.5", "Back Rise": "38.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TM-SP162-61", "uid": "TM-SP162-61", "gender": "MEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "리네아", "measures": {"Waist": "78", "Low Hip": "112", "Thigh": "73", "Leg Opening": "66.5", "Inseam": "13", "Outseam": "40", "Front Rise": "25.5", "Back Rise": "39"}}, {"line": "SP", "category": "SHORTS", "ref": "TM-SP229-64", "uid": "TM-SP229-64", "gender": "MEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "내장 이너팬츠", "measures": {"Waist": "78", "Low Hip": "110", "Thigh": "71", "Leg Opening": "64.5", "Inseam": "15", "Outseam": "43", "Front Rise": "25", "Back Rise": "40.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TM-SP263-61", "uid": "TM-SP263-61", "gender": "MEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "프레쉬닷", "measures": {"Waist": "78", "Low Hip": "112", "Thigh": "72", "Leg Opening": "66", "Inseam": "15.5", "Outseam": "43", "Front Rise": "25.5", "Back Rise": "39.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TM-SP202-51", "uid": "TM-SP202-51", "gender": "MEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "밑단 와끼에 트임", "measures": {"Waist": "80", "Low Hip": "109.5", "Thigh": "70.5", "Leg Opening": "62", "Inseam": "17", "Outseam": "45.5", "Front Rise": "25", "Back Rise": "38.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TX-SP256-53", "uid": "TX-SP256-53", "gender": "UNISEX", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "컴포트쿨\n이밴드", "measures": {"Waist": "78", "Low Hip": "112", "Thigh": "72", "Leg Opening": "66.5", "Inseam": "18", "Outseam": "46.5", "Front Rise": "26", "Back Rise": "40.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TM-SP205-53", "uid": "TM-SP205-53", "gender": "MEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "뎅고\n코튼라이크 버뮤다", "measures": {"Waist": "82", "Low Hip": "108", "Thigh": "71", "Leg Opening": "63.5", "Inseam": "22.5", "Outseam": "52.5", "Front Rise": "27", "Back Rise": "39.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TM-SP253-53", "uid": "TM-SP253-53", "gender": "MEN", "fit": "RELAX", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "컴포트쿨 \n뎅고", "measures": {"Waist": "84", "Low Hip": "112", "Thigh": "74", "Leg Opening": "65.5", "Inseam": "24", "Outseam": "52.5", "Front Rise": "25.5", "Back Rise": "41.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP107-61", "uid": "TW-SP107-61", "gender": "WOMEN", "fit": "REGULAR", "fabric": "JERSEY", "line_style": "", "subtype": "", "remark": "더블 PK", "measures": {"Waist": "67", "Low Hip": "103", "Thigh": "65.5", "Leg Opening": "65", "Inseam": "7", "Outseam": "35", "Front Rise": "25.5", "Back Rise": "36"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP171-64", "uid": "TW-SP171-64", "gender": "WOMEN", "fit": "REGULAR", "fabric": "JERSEY", "line_style": "", "subtype": "", "remark": "버터쭈리, 내장 이너팬츠", "measures": {"Waist": "68", "Low Hip": "102", "Thigh": "66", "Leg Opening": "63", "Inseam": "8.3", "Outseam": "34", "Front Rise": "25", "Back Rise": "34.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP102-61", "uid": "TW-SP102-61", "gender": "WOMEN", "fit": "REGULAR", "fabric": "JERSEY", "line_style": "", "subtype": "", "remark": "더블니트", "measures": {"Waist": "68", "Low Hip": "102", "Thigh": "64", "Inseam": "8.5", "Outseam": "29", "Front Rise": "24", "Back Rise": "34.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP101-61", "uid": "TW-SP101-61", "gender": "WOMEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "", "subtype": "", "remark": "쿠쉬라이트 프렌치 스커티", "measures": {"Waist": "67", "Low Hip": "98", "Thigh": "81", "Leg Opening": "81.5", "Inseam": "7", "Outseam": "36", "Front Rise": "29.5", "Back Rise": "37"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP103-61", "uid": "TW-SP103-61", "gender": "WOMEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "", "subtype": "", "remark": "더블니트", "measures": {"Waist": "67", "Low Hip": "100", "Thigh": "N/A", "Leg Opening": "118", "Inseam": "9.5", "Outseam": "35", "Front Rise": "26", "Back Rise": "34.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP229-64", "uid": "TW-SP229-64", "gender": "WOMEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "내장 이너팬츠", "measures": {"Waist": "68", "Low Hip": "100", "Thigh": "66.5", "Leg Opening": "65", "Inseam": "6.5", "Front Rise": "23", "Back Rise": "38"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP260-54", "uid": "TW-SP260-54", "gender": "WOMEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "내장 이너팬츠", "measures": {"Waist": "67", "Low Hip": "96", "Thigh": "65", "Leg Opening": "65", "Inseam": "7", "Front Rise": "24.5", "Back Rise": "35.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP202-61", "uid": "TW-SP202-61", "gender": "WOMEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "", "measures": {"Waist": "68", "Low Hip": "98", "Thigh": "63.5", "Leg Opening": "58", "Inseam": "12.5", "Outseam": "38", "Front Rise": "23", "Back Rise": "36.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP205-53", "uid": "TW-SP205-53", "gender": "WOMEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "뎅고, 코튼라이크 버뮤다", "measures": {"Waist": "68", "Low Hip": "99", "Thigh": "68", "Leg Opening": "63", "Inseam": "21", "Outseam": "49", "Front Rise": "25", "Back Rise": "37"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP262-63", "uid": "TW-SP262-63", "gender": "WOMEN", "fit": "RELAX", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "내장 이너팬츠", "measures": {"Waist": "64", "Low Hip": "108", "Leg Opening": "73.5", "Inseam": "6.5", "Outseam": "26.2", "Front Rise": "26", "Back Rise": "36"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP263-61", "uid": "TW-SP263-61", "gender": "WOMEN", "fit": "RELAX", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "프레쉬닷 핀턱 쇼츠, 뎅고", "measures": {"Waist": "66", "Low Hip": "96", "Thigh": "70", "Leg Opening": "72", "Inseam": "9", "Outseam": "38.5", "Front Rise": "29.5", "Back Rise": "37"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP208-63", "uid": "TW-SP208-63", "gender": "WOMEN", "fit": "RELAX", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "스커티", "measures": {"Waist": "67", "Low Hip": "132", "Leg Opening": "108", "Inseam": "8", "Outseam": "35", "Front Rise": "30.5", "Back Rise": "35.5"}}, {"line": "SP", "category": "SHORTS", "ref": "TW-SP264-61", "uid": "TW-SP264-61", "gender": "WOMEN", "fit": "RELAX", "fabric": "WOVEN", "line_style": "", "subtype": "", "remark": "플로위 스커티\n이너팬츠", "measures": {"Waist": "65", "Low Hip": "110", "Thigh": "103", "Leg Opening": "105", "Inseam": "9.5", "Outseam": "36", "Front Rise": "28.5", "Back Rise": "38.5"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT104-44", "uid": "TM-PT104-44", "gender": "MEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "STRAIGHT", "subtype": "", "remark": "쿠션지", "measures": {"Waist": "78", "Low Hip": "104", "Thigh": "63", "Knee": "44", "Leg Opening": "35", "Outseam": "102", "Front Rise": "25", "Back Rise": "38"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT102-64", "uid": "TM-PT102-64", "gender": "MEN", "fit": "REGULAR", "fabric": "JERSEY", "line_style": "STRAIGHT", "subtype": "", "remark": "", "measures": {"Waist": "78", "Low Hip": "104", "Thigh": "64", "Knee": "56", "Leg Opening": "52.5", "Outseam": "103", "Front Rise": "24.5", "Back Rise": "38.5"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT106-44", "uid": "TM-PT106-44", "gender": "MEN", "fit": "REGULAR", "fabric": "JERSEY", "line_style": "TAPERED", "subtype": "", "remark": "약기모", "measures": {"Waist": "78", "Low Hip": "108", "Thigh": "65", "Knee": "44", "Leg Opening": "30", "Outseam": "99", "Front Rise": "25", "Back Rise": "39.5"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT160-66", "uid": "TM-PT160-66", "gender": "MEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "WIDE", "subtype": "", "remark": "기모, 2 IN 1", "measures": {"Waist": "78", "Low Hip": "110", "Thigh": "69.5", "Knee": "56.5", "Leg Opening": "52", "Outseam": "103", "Front Rise": "25", "Back Rise": "38"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT182-66", "uid": "TM-PT182-66", "gender": "MEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "WIDE", "subtype": "", "remark": "플리스, 2 IN 1", "measures": {"Waist": "80", "Low Hip": "114", "Thigh": "72", "Knee": "60.5", "Leg Opening": "56.5", "Outseam": "103", "Front Rise": "25.5", "Back Rise": "40"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT105-46", "uid": "TM-PT105-46", "gender": "MEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "JOGGER", "subtype": "", "remark": "약기모", "measures": {"Waist": "78", "Low Hip": "108", "Thigh": "66", "Knee": "50", "Leg Opening": "27", "Outseam": "101", "Front Rise": "25", "Back Rise": "39"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT171-64", "uid": "TM-PT171-64", "gender": "MEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "JOGGER", "subtype": "", "remark": "버터쭈리", "measures": {"Waist": "78", "Low Hip": "109", "Thigh": "68", "Knee": "54", "Leg Opening": "32", "Outseam": "102", "Front Rise": "24", "Back Rise": "39"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT704-43", "uid": "TM-PT704-43", "gender": "MEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "STRAIGHT", "subtype": "", "remark": "", "measures": {"Waist": "80", "Low Hip": "105", "Thigh": "65", "Knee": "49", "Leg Opening": "40", "Outseam": "104", "Front Rise": "26", "Back Rise": "39.5"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT208-66", "uid": "TM-PT208-66", "gender": "MEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "STRAIGHT", "subtype": "", "remark": "뎅고", "measures": {"Waist": "82", "Low Hip": "106", "Thigh": "66", "Knee": "48", "Leg Opening": "38", "Outseam": "102", "Front Rise": "24.5", "Back Rise": "39.5"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT210-46", "uid": "TM-PT210-46", "gender": "MEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "TAPERED", "subtype": "", "remark": "", "measures": {"Waist": "80", "Low Hip": "108", "Thigh": "65", "Knee": "44", "Leg Opening": "30", "Outseam": "99", "Front Rise": "25", "Back Rise": "39.5"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT208-56", "uid": "TM-PT208-56", "gender": "MEN", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "TAPERED", "subtype": "", "remark": "", "measures": {"Waist": "78", "Low Hip": "108", "Thigh": "67.5", "Knee": "47.5", "Leg Opening": "36", "Outseam": "100", "Front Rise": "25", "Back Rise": "40"}}, {"line": "PT", "category": "PANTS", "ref": "TX-PT260-54", "uid": "TX-PT260-54", "gender": "UNISEX", "fit": "REGULAR", "fabric": "WOVEN", "line_style": "TAPERED", "subtype": "", "remark": "", "measures": {"Waist": "78", "Low Hip": "110", "Thigh": "66", "Knee": "46", "Leg Opening": "31.5", "Outseam": "100.5", "Front Rise": "24.5", "Back Rise": "38"}}, {"line": "PT", "category": "PANTS", "ref": "TX-PT204-51", "uid": "TX-PT204-51", "gender": "UNISEX", "fit": "RELAX", "fabric": "WOVEN", "line_style": "WIDE", "subtype": "", "remark": "2 IN 1", "measures": {"Waist": "80", "Low Hip": "108", "Thigh": "71", "Knee": "58", "Leg Opening": "50", "Outseam": "106", "Front Rise": "27.5", "Back Rise": "40.5"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT701-46", "uid": "TM-PT701-46", "gender": "MEN", "fit": "RELAX", "fabric": "WOVEN", "line_style": "JOGGER", "subtype": "", "remark": "기모", "measures": {"Waist": "78", "Low Hip": "107", "Thigh": "67.5", "Knee": "47.5", "Leg Opening": "30", "Outseam": "102", "Front Rise": "25", "Back Rise": "40"}}, {"line": "PT", "category": "PANTS", "ref": "TM-PT229-64", "uid": "TM-PT229-64", "gender": "MEN", "fit": "RELAX", "fabric": "WOVEN", "line_style": "JOGGER", "subtype": "", "remark": "", "measures": {"Waist": "80", "Low Hip": "112", "Thigh": "69", "Knee": "54", "Leg Opening": "34", "Outseam": "102", "Front Rise": "26", "Back Rise": "40.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT102-61", "uid": "TW-PT102-61", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "BOOT CUT", "subtype": "", "remark": "", "measures": {"Waist": "64", "Low Hip": "86", "Thigh": "51", "Knee": "40", "Leg Opening": "54", "Outseam": "100.5", "Front Rise": "19.5", "Back Rise": "30.7"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT130-64", "uid": "TW-PT130-64", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "BOOT CUT", "subtype": "", "remark": "골지", "measures": {"Waist": "68", "Low Hip": "86", "Thigh": "50", "Knee": "38", "Leg Opening": "46", "Outseam": "100", "Front Rise": "20.5", "Back Rise": "31.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT141-64", "uid": "TW-PT141-64", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "BOOT CUT", "subtype": "", "remark": "버터쭈리", "measures": {"Waist": "68", "Low Hip": "90", "Thigh": "58", "Knee": "48", "Leg Opening": "52", "Outseam": "100.5", "Front Rise": "21", "Back Rise": "33"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT102-64", "uid": "TW-PT102-64", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "BOOT CUT", "subtype": "", "remark": "다마린도", "measures": {"Waist": "67", "Low Hip": "95", "Thigh": "57", "Knee": "43.5", "Leg Opening": "52", "Outseam": "100", "Front Rise": "21", "Back Rise": "34.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT109-44", "uid": "TW-PT109-44", "gender": "WOMEN", "fit": "REGULAR", "fabric": "JERSEY", "line_style": "STRAIGHT", "subtype": "", "remark": "오비 이밴드", "measures": {"Waist": "68", "Low Hip": "92", "Thigh": "58", "Knee": "48", "Leg Opening": "46", "Outseam": "101", "Front Rise": "21.5", "Back Rise": "34.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT102-44", "uid": "TW-PT102-44", "gender": "WOMEN", "fit": "REGULAR", "fabric": "JERSEY", "line_style": "STRAIGHT", "subtype": "", "remark": "다마린도", "measures": {"Waist": "68", "Low Hip": "94", "Thigh": "59", "Knee": "47", "Leg Opening": "44", "Outseam": "101", "Front Rise": "23", "Back Rise": "36"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT107-61", "uid": "TW-PT107-61", "gender": "WOMEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "WIDE", "subtype": "", "remark": "쿠쉬라이트", "measures": {"Waist": "69", "Low Hip": "102", "Thigh": "66", "Knee": "58", "Leg Opening": "54", "Outseam": "100", "Front Rise": "26", "Back Rise": "34"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT160-66", "uid": "TW-PT160-66", "gender": "WOMEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "WIDE", "subtype": "", "remark": "2 IN I", "measures": {"Waist": "68", "Low Hip": "98", "Thigh": "64.5", "Knee": "56", "Leg Opening": "52", "Outseam": "100", "Front Rise": "25.3", "Back Rise": "35.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT182-66", "uid": "TW-PT182-66", "gender": "WOMEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "WIDE", "subtype": "", "remark": "플리스, 2 IN 1", "measures": {"Waist": "67", "Low Hip": "101", "Thigh": "64.5", "Knee": "54", "Leg Opening": "50", "Outseam": "100", "Front Rise": "24.5", "Back Rise": "36.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT191-56", "uid": "TW-PT191-56", "gender": "WOMEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "WIDE", "subtype": "", "remark": "플리스, 2 IN 1", "measures": {"Waist": "70", "Low Hip": "103", "Thigh": "64", "Knee": "55", "Leg Opening": "50", "Outseam": "101", "Front Rise": "25.5", "Back Rise": "35.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT171-64", "uid": "TW-PT171-64", "gender": "WOMEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "JOGGER", "subtype": "", "remark": "버터쭈리", "measures": {"Waist": "68", "Low Hip": "100", "Thigh": "64.5", "Knee": "52", "Leg Opening": "26", "Outseam": "98", "Front Rise": "23.5", "Back Rise": "35.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT160-61", "uid": "TW-PT160-61", "gender": "WOMEN", "fit": "RELAX", "fabric": "JERSEY", "line_style": "JOGGER", "subtype": "", "remark": "랄프로렌", "measures": {"Waist": "70", "Low Hip": "103", "Thigh": "64.5", "Knee": "51", "Leg Opening": "25", "Outseam": "97.5", "Front Rise": "24.5", "Back Rise": "35.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT702-46", "uid": "TW-PT702-46", "gender": "WOMEN", "fit": "SLIM", "fabric": "WOVEN", "line_style": "BOOT CUT", "subtype": "", "remark": "우븐 부츠컷", "measures": {"Waist": "70", "Low Hip": "90", "Thigh": "54.5", "Knee": "42", "Leg Opening": "47", "Outseam": "102", "Front Rise": "21.5", "Back Rise": "35"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT106-53", "uid": "TW-PT106-53", "gender": "WOMEN", "fit": "RELAX", "fabric": "WOVEN", "line_style": "WIDE", "subtype": "", "remark": "핀턱", "measures": {"Waist": "67", "Low Hip": "95.5", "Thigh": "67.5", "Knee": "58", "Leg Opening": "57", "Outseam": "104", "Front Rise": "26", "Back Rise": "35.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT207-61", "uid": "TW-PT207-61", "gender": "WOMEN", "fit": "RELAX", "fabric": "WOVEN", "line_style": "WIDE", "subtype": "", "remark": "alo yoga", "measures": {"Waist": "66.5", "Low Hip": "104", "Thigh": "66.5", "Knee": "56.5", "Leg Opening": "52.5", "Outseam": "102", "Front Rise": "25", "Back Rise": "35.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT207-44", "uid": "TW-PT207-44", "gender": "WOMEN", "fit": "RELAX", "fabric": "WOVEN", "line_style": "JOGGER", "subtype": "", "remark": "", "measures": {"Waist": "68", "Low Hip": "98", "Thigh": "59.5", "Knee": "46", "Leg Opening": "26", "Outseam": "98", "Front Rise": "23", "Back Rise": "36.5"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK109-61", "uid": "TW-SK109-61", "gender": "WOMEN", "fit": "", "fabric": "JERSEY", "subtype": "CLASSIC PLEATS", "remark": "플라잉 스커트, 주름 개수: 앞, 뒤 16개", "measures": {"Waist": "64", "Low Hip": "82", "Skirt Sweep": "96", "Front Skirt Length": "37.5", "Back Skirt Length": "38.5", "Outseam": "38", "Pleats width": "2.5"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK110-61", "uid": "TW-SK110-61", "gender": "WOMEN", "fit": "", "fabric": "JERSEY", "subtype": "MICRO PLEATS", "remark": "피케, 주름 개수: 앞,뒤 34개", "measures": {"Waist": "64", "Low Hip": "82", "Skirt Sweep": "94", "Front Skirt Length": "37.5", "Back Skirt Length": "38.5", "Outseam": "38", "Pleats width": "1.2"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK121-53", "uid": "TW-SK121-53", "gender": "WOMEN", "fit": "", "fabric": "JERSEY", "subtype": "MICRO PLEATS", "remark": "메쉬, 주름 개수: 앞,뒤 29개", "measures": {"Waist": "64", "Low Hip": "82", "Skirt Sweep": "104", "Front Skirt Length": "38", "Back Skirt Length": "38.5", "Outseam": "38", "Pleats width": "1"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK160-63", "uid": "TW-SK160-63", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "MICRO PLEATS", "remark": "우븐, 주름 개수: 앞, 뒤 34개", "measures": {"Waist": "62", "Low Hip": "90", "Skirt Sweep": "96", "Front Skirt Length": "36", "Back Skirt Length": "37", "Outseam": "36.5", "Pleats width": "1.2"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK221-61", "uid": "TW-SK221-61", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "WIDE PLEATS", "remark": "주름 개수 : 뒤 10개", "measures": {"Waist": "67", "Low Hip": "92", "Skirt Sweep": "110", "Front Skirt Length": "36.5", "Back Skirt Length": "39.5", "Outseam": "38", "Pleats width": "4"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK202-61", "uid": "TW-SK202-61", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "WIDE PLEATS", "remark": "주름 개수: 앞,뒤 8개씩", "measures": {"Waist": "69", "Low Hip": "95", "Skirt Sweep": "115", "Front Skirt Length": "37.5", "Back Skirt Length": "38", "Outseam": "37.5", "Pleats width": "4"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK203-61", "uid": "TW-SK203-61", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "WIDE PLEATS", "remark": "주름 개수: 앞,뒤 12개", "measures": {"Waist": "70", "Low Hip": "92", "Skirt Sweep": "109", "Front Skirt Length": "34.5", "Back Skirt Length": "35", "Outseam": "35", "Pleats width": "4"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK290-54", "uid": "TW-SK290-54", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "WIDE PLEATS", "remark": "", "measures": {"Waist": "70", "Low Hip": "92", "Skirt Sweep": "112", "Front Skirt Length": "41", "Back Skirt Length": "42", "Outseam": "38 / 41.5 (착우)", "Pleats width": "4 (큰 주름) / 2 (작은 주름)"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK291-64", "uid": "TW-SK291-64", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "WIDE PLEATS", "remark": "주름 개수: 앞,뒤 8개씩", "measures": {"Waist": "68", "Low Hip": "92", "Skirt Sweep": "108", "Front Skirt Length": "37", "Back Skirt Length": "38", "Outseam": "37"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK201-44", "uid": "TW-SK201-44", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "A-LINE", "remark": "", "measures": {"Waist": "68", "Low Hip": "94", "Skirt Sweep": "109", "Front Skirt Length": "37", "Back Skirt Length": "38.5", "Outseam": "38"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK205-63", "uid": "TW-SK205-63", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "A-LINE", "remark": "alo yoga, 세미 A라인", "measures": {"Waist": "67", "Low Hip": "102", "Skirt Sweep": "110", "Front Skirt Length": "32.5", "Back Skirt Length": "35.5", "Outseam": "30"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK102-61", "uid": "TW-SK102-61", "gender": "WOMEN", "fit": "", "fabric": "JERSEY", "subtype": "A-LINE", "remark": "", "measures": {"Waist": "68", "Low Hip": "95", "Skirt Sweep": "107", "Front Skirt Length": "35", "Back Skirt Length": "36", "Outseam": "36"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK102-41", "uid": "TW-SK102-41", "gender": "WOMEN", "fit": "", "fabric": "JERSEY", "subtype": "A-LINE", "remark": "", "measures": {"Waist": "70", "Low Hip": "93", "Skirt Sweep": "102", "Front Skirt Length": "37.5", "Back Skirt Length": "38.5", "Outseam": "38"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK202-51", "uid": "TW-SK202-51", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "LONG", "remark": "", "measures": {"Waist": "69", "Low Hip": "99", "Skirt Sweep": "116", "Front Skirt Length": "79", "Back Skirt Length": "80.5", "Outseam": "80.5"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK103-51", "uid": "TW-SK103-51", "gender": "WOMEN", "fit": "", "fabric": "JERSEY", "subtype": "LONG", "remark": "", "measures": {"Waist": "68", "Low Hip": "96", "Skirt Sweep": "103", "Front Skirt Length": "78.5", "Back Skirt Length": "80", "Outseam": "80"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK107-41", "uid": "TW-SK107-41", "gender": "WOMEN", "fit": "", "fabric": "JERSEY", "subtype": "FLARE", "remark": "", "measures": {"Waist": "65", "Low Hip": "107.5", "Skirt Sweep": "142.5", "Front Skirt Length": "39", "Back Skirt Length": "40", "Outseam": "39"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK151-64", "uid": "TW-SK151-64", "gender": "WOMEN", "fit": "", "fabric": "JERSEY", "subtype": "FLARE", "remark": "", "measures": {"Waist": "62", "Low Hip": "94", "Skirt Sweep": "129", "Front Skirt Length": "37", "Back Skirt Length": "39", "Outseam": "38"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK120-53", "uid": "TW-SK120-53", "gender": "WOMEN", "fit": "", "fabric": "JERSEY", "subtype": "FLARE", "remark": "메쉬, 2 LAYER", "measures": {"Waist": "60", "Skirt Sweep": "195 (겉장)", "Front Skirt Length": "39 (겉장)", "Back Skirt Length": "40 (겉장)", "Outseam": "30 (겉장)"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK100-44", "uid": "TW-SK100-44", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "FLARE", "remark": "앞판 주름, 뒷판 플레어,\n내장 레깅스", "measures": {"Waist": "63", "Low Hip": "98.5", "Skirt Sweep": "124", "Front Skirt Length": "34.5", "Back Skirt Length": "36", "Outseam": "34.5"}}, {"line": "SK", "category": "SKIRT", "ref": "TW-SK161-63", "uid": "TW-SK161-63", "gender": "WOMEN", "fit": "", "fabric": "WOVEN", "subtype": "FLARE", "remark": "2 LAYER", "measures": {"Waist": "64", "Skirt Sweep": "205", "Front Skirt Length": "33 (안장)", "Back Skirt Length": "29 (안장)", "Outseam": "34.5 (안장)"}}, {"line": "LG", "category": "LEGGINGS", "ref": "TW-LG105-51", "uid": "TW-LG105-51", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "STRAIGHT", "subtype": "", "remark": "", "measures": {"Waist": "56", "Low Hip": "72", "Thigh": "42.5", "Leg Opening": "35", "Outseam": "41.5", "Front Rise": "25", "Back Rise": "34.7"}}, {"line": "LG", "category": "LEGGINGS", "ref": "TW-LG105-63", "uid": "TW-LG105-63", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "STRAIGHT", "subtype": "", "remark": "마시멜로우 바이커", "measures": {"Waist": "53", "Low Hip": "72", "Thigh": "46", "Leg Opening": "40", "Outseam": "39", "Front Rise": "26.5", "Back Rise": "36"}}, {"line": "LG", "category": "LEGGINGS", "ref": "TW-LG102-51", "uid": "TW-LG102-51", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "STRAIGHT", "subtype": "", "remark": "", "measures": {"Waist": "57", "Low Hip": "71.5", "Thigh": "41.5", "Knee": "29", "Leg Opening": "18", "Outseam": "84", "Front Rise": "23.5", "Back Rise": "34.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT110-46", "uid": "TW-PT110-46", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "BOOT CUT", "subtype": "", "remark": "기모", "measures": {"Waist": "60", "Low Hip": "82", "Thigh": "46.5", "Knee": "38", "Leg Opening": "46", "Front Rise": "14.5 (오비 제외)", "Back Rise": "34 (오비 제외)"}}, {"line": "LG", "category": "LEGGINGS", "ref": "TW-LG103-53", "uid": "TW-LG103-53", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "BOOT CUT", "subtype": "", "remark": "바지 & 레깅스 중간", "measures": {"Waist": "57", "Low Hip": "84", "Thigh": "51", "Knee": "39.5", "Leg Opening": "49", "Outseam": "102", "Front Rise": "24", "Back Rise": "36"}}, {"line": "LG", "category": "LEGGINGS", "ref": "TW-LG103-61", "uid": "TW-LG103-61", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "BOOT CUT", "subtype": "", "remark": "마시멜로우", "measures": {"Waist": "53", "Low Hip": "75", "Thigh": "46.5", "Knee": "37", "Leg Opening": "48", "Outseam": "97", "Front Rise": "25.5", "Back Rise": "35.5"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT101-40", "uid": "TW-PT101-40", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "BOOT CUT", "subtype": "", "remark": "", "measures": {"Waist": "63", "Low Hip": "88", "Thigh": "52", "Knee": "40", "Leg Opening": "52", "Outseam": "103", "Front Rise": "16.5 (오비 제외)", "Back Rise": "31 (오비 제외)"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT108-44", "uid": "TW-PT108-44", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "BOOT CUT", "subtype": "", "remark": "제허리 착용", "measures": {"Waist": "64", "Low Hip": "88", "Thigh": "52", "Knee": "40", "Leg Opening": "52", "Outseam": "100.5", "Front Rise": "20 (오비 제외)", "Back Rise": "34 (오비 제외)"}}, {"line": "PT", "category": "PANTS", "ref": "TW-PT606-41", "uid": "TW-PT606-41", "gender": "WOMEN", "fit": "SLIM", "fabric": "JERSEY", "line_style": "BOOT CUT", "subtype": "", "remark": "", "measures": {"Waist": "68", "Low Hip": "88", "Thigh": "53", "Knee": "40", "Leg Opening": "52", "Outseam": "99.5", "Front Rise": "14.5 (오비 제외)", "Back Rise": "24 (오비 제외)"}}];
+    const safeData = Array.isArray(DATA) ? DATA : [];
+
+    function genderTag(g, ref) {
+        // TX- prefix always shows UNISEX tag regardless of stored gender value
+        const refStr = String(ref || "").toUpperCase();
+        if (refStr.startsWith("TX-")) {
+            return `<span class="tag tag-unisex">UNISEX</span>`;
+        }
+        const cls = g === "WOMEN" ? "tag-women" : "tag-men";
+        const label = g === "WOMEN" ? "WOMEN" : "MEN";
+        return `<span class="tag ${cls}">${label}</span>`;
+    }
+    function fitTag(fit) {
+        const map = {
+            "SLIM":         ["#ede9fe","#6d28d9"],
+            "REGULAR":      ["#ccfbf1","#0f766e"],
+            "RELAX":        ["#fef3c7","#92400e"],
+            "RELAX - WIDE": ["#fef9c3","#713f12"],
+            "COMFORT":      ["#d1fae5","#065f46"],
+            "WIDE":         ["#fee2e2","#991b1b"],
+            "JOGGER":       ["#e0f2fe","#0369a1"],
+            "SLIM-BOOTSCUT":["#ffedd5","#9a3412"]
+        };
+        if (!map[fit]) return "";
+        return `<span class="tag" style="background:${map[fit][0]};color:${map[fit][1]}">${fit}</span>`;
+    }
+
+    function fabricTag(fabric) {
+        const map = {
+            "JERSEY": ["#ede9fe","#5b21b6"],
+            "WOVEN":  ["#fef9c3","#854d0e"]
+        };
+        if (!map[fabric]) return "";
+        return `<span class="tag" style="background:${map[fabric][0]};color:${map[fabric][1]};font-size:10px;">${fabric}</span>`;
+    }
+    function lineStyleTag(ls) {
+        const map = {
+            "STRAIGHT":  ["#f0fdf4","#166534"],
+            "TAPERED":   ["#fdf4ff","#7e22ce"],
+            "WIDE":      ["#fff7ed","#9a3412"],
+            "JOGGER":    ["#f0f9ff","#0c4a6e"],
+            "BOOT CUT":  ["#fdf2f8","#9d174d"]
+        };
+        const c = map[ls] || ["#f3f4f6","#6b7280"];
+        return `<span class="tag" style="background:${c[0]};color:${c[1]};font-size:10px;">${ls}</span>`;
+    }
+    function subtypeTag(sub) {
+        return `<span class="tag" style="background:#f3f4f6;color:#6b7280;font-size:10px;">${sub}</span>`;
+    }
+
+    function renderCards(items) {
+        const grid = document.getElementById("grid");
+        document.getElementById("count").textContent = items.length;
+        if (!items.length) {
+            grid.innerHTML = '<div class="empty">검색 결과가 없습니다.</div>';
+            return;
+        }
+        grid.innerHTML = items.map((item, i) => {
+            const m = item.measures;
+            const delay = Math.min(i * 40, 800);
+            return `<div class="card" style="animation-delay:${delay}ms" onclick="openModal('${item.uid || item.ref}')">
+                <div class="card-img">
+                    <img src="images/${item.ref}.png" alt="${item.ref}"
+                         onerror="this.onerror=null;this.parentNode.innerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:12px;&quot;>이미지 없음</div>'">
+                </div>
+                <div class="card-body">
+                    <div class="card-ref">${item.uid || item.ref}</div>
+                    <div class="tags">
+                        ${genderTag(item.gender, item.ref)}
+                        ${item.fabric ? fabricTag(item.fabric) : ""}
+                        <span class="tag tag-line">${item.line}</span>
+                        ${fitTag(item.fit)}
+                        ${item.line_style ? lineStyleTag(item.line_style) : ""}
+                        ${item.subtype ? subtypeTag(item.subtype) : ""}
+                    </div>
+                    <div class="measures">
+                        <div class="measure-item">${m["Waist"] ? "Waist: <span>"+m["Waist"]+"</span>" : ""}</div>
+                        <div class="measure-item">${m["Low Hip"] ? "Hip: <span>"+m["Low Hip"]+"</span>" : ""}</div>
+                        <div class="measure-item">${m["Outseam"] ? "Outseam: <span>"+m["Outseam"]+"</span>" : ""}</div>
+
+                    </div>
+                    ${item.remark ? `<div class="remark">${item.remark}</div>` : ""}
+                </div>
+            </div>`;
+        }).join("");
+    }
+
+    // ── STATE ──
+    let currentTab    = "ALL";   // SP / PT / SK / LG / ALL
+    let currentGender = "";      // MEN / WOMEN / ""
+
+    // ── SP 기장 가이드 데이터 ──
+    const SP_GUIDE = {
+        men: [
+            { inch: '3" (3부)',   outseam: '36cm (35~37)', inseam: '8cm (7~9)'   },
+            { inch: '5" (3.5~4부)', outseam: '41cm (40~42)', inseam: '13cm (12~14)' },
+            { inch: '7" (4.5부)', outseam: '46cm (45~47)', inseam: '18cm (17~19)' },
+            { inch: '9" (5부)',   outseam: '51cm (50~52)', inseam: '23cm (22~24)' },
+            { inch: '7부 (Extra)', outseam: '67cm', inseam: '39cm' }
+        ],
+        women: [
+            { inch: '3" (3부)',   outseam: '34cm (33~35)', inseam: '8cm (7~9)'   },
+            { inch: '5" (3.5~4부)', outseam: '39cm (38~40)', inseam: '13cm (12~14)' },
+            { inch: '7" (4.5부)', outseam: '44cm (43~45)', inseam: '18cm (17~19)' },
+            { inch: '9" (5부)',   outseam: '49cm (48~50)', inseam: '23cm (22~24)' },
+            { inch: '7부 (Extra)', outseam: '62cm', inseam: '36cm' }
+        ]
+    };
+
+    function renderInfoPanel() {
+        const panel = document.getElementById("info-panel");
+        if (currentTab !== "SP") {
+            panel.classList.remove("open");
+            return;
+        }
+        panel.classList.add("open");
+        const makeTable = (genderLabel, rows) => `
+            <div class="sp-guide-block">
+                <div class="sp-guide-gender">${genderLabel}</div>
+                <table class="sp-guide-table">
+                    <thead><tr><th>기장</th><th>Outseam</th><th>Inseam</th></tr></thead>
+                    <tbody>${rows.map(r => `
+                        <tr>
+                            <td>${r.inch}</td>
+                            <td>${r.outseam}</td>
+                            <td>${r.inseam}</td>
+                        </tr>`).join("")}
+                    </tbody>
+                </table>
+            </div>`;
+        panel.innerHTML = `
+            <div class="info-panel-title">반바지 기장 가이드 — Outseam / Inseam</div>
+            <div class="sp-guide-wrap">
+                ${makeTable("MEN · Dummy Waist 78cm", SP_GUIDE.men)}
+                ${makeTable("WOMEN · Dummy Waist 65cm", SP_GUIDE.women)}
+            </div>
+            <div class="sp-guide-note">
+                * Outseam 기장은 남 78cm / 여 65cm 허리 둘레일 때 착장 위치 기준 &nbsp;·&nbsp; * Inseam 기장은 밑위 발란스에 따라 변동 가능
+            </div>`;
+    }
+
+    function updateSubFilters() {
+        const fitPill  = document.getElementById("pill-fit");
+        const linePill = document.getElementById("pill-line-style");
+        const fitSel   = document.getElementById("filter-fit");
+        const lineSel  = document.getElementById("filter-line-style");
+
+        // Fit 필터: SK일 때 subtype 기준, 나머지는 fit 기준
+        const showFit = currentTab !== "ALL";
+        fitPill.style.display = showFit ? "" : "none";
+        if (showFit) {
+            const filtered = currentTab ? safeData.filter(i => i.line === currentTab) : safeData;
+            const values = [...new Set(
+                filtered.map(i => currentTab === "SK" ? i.subtype : i.fit).filter(Boolean)
+            )].sort();
+            const cur = fitSel.value;
+            fitSel.innerHTML = `<option value="">All</option>` +
+                values.map(v => `<option value="${v}">${v}</option>`).join("");
+            fitSel.value = values.includes(cur) ? cur : "";
+        }
+
+        // Line Style: PT일 때만
+        const showLine = currentTab === "PT";
+        linePill.style.display = showLine ? "" : "none";
+        if (showLine) {
+            const filtered = safeData.filter(i => i.line === "PT");
+            const values = [...new Set(filtered.map(i => i.line_style).filter(Boolean))].sort();
+            const cur = lineSel.value;
+            lineSel.innerHTML = `<option value="">All</option>` +
+                values.map(v => `<option value="${v}">${v}</option>`).join("");
+            lineSel.value = values.includes(cur) ? cur : "";
+        } else {
+            lineSel.value = "";
+        }
+    }
+
+    function applyFilter() {
+        const fit        = document.getElementById("filter-fit").value;
+        const fabric     = document.getElementById("filter-fabric").value;
+        const line_style = document.getElementById("filter-line-style").value;
+        const q          = document.getElementById("search-input").value.toLowerCase().trim();
+
+        renderCards(safeData.filter(item => {
+            const ref = String(item.ref || "").toUpperCase();
+            const isTX = ref.startsWith("TX-");
+            const effectiveGender = isTX ? "MEN" : item.gender;
+            const genderMatch = !currentGender || effectiveGender === currentGender;
+            const lineMatch   = !currentTab || currentTab === "ALL" || item.line === currentTab;
+            const fitMatch    = !fit || (item.line === "SK" ? item.subtype === fit : item.fit === fit);
+            return genderMatch && lineMatch && fitMatch &&
+                (!fabric     || item.fabric     === fabric)     &&
+                (!line_style || item.line_style === line_style) &&
+                (!q          || (item.uid || item.ref).toLowerCase().includes(q));
+        }));
+    }
+
+    function switchTab(tab, btn) {
+        currentTab = tab;
+        document.querySelectorAll(".cat-tab").forEach(t => t.classList.remove("active"));
+        btn.classList.add("active");
+        // fit/line-style 필터 초기화
+        document.getElementById("filter-fit").value = "";
+        document.getElementById("filter-line-style").value = "";
+        updateSubFilters();
+        renderInfoPanel();
+        applyFilter();
+    }
+
+    function setGender(gender, btn) {
+        currentGender = gender;
+        document.querySelectorAll(".gender-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        applyFilter();
+    }
+
+    function resetAll() {
+        currentTab    = "ALL";
+        currentGender = "";
+        document.querySelectorAll(".cat-tab").forEach((t, i) => t.classList.toggle("active", i === 0));
+        document.querySelectorAll(".gender-btn").forEach((b, i) => b.classList.toggle("active", i === 0));
+        document.getElementById("filter-fabric").value    = "";
+        document.getElementById("filter-fit").value      = "";
+        document.getElementById("filter-line-style").value = "";
+        document.getElementById("search-input").value    = "";
+        updateSubFilters();
+        renderInfoPanel();
+        applyFilter();
+    }
+
+    document.getElementById("search-input").addEventListener("input", applyFilter);
+    document.getElementById("search-input").addEventListener("keydown", e => {
+        if (e.key === "Escape") resetAll();
+    });
+
+    // Loading screen → fade out → render cards
+    // Loading screen → fade out → render cards
+    window.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => {
+            const ls = document.getElementById("loading-screen");
+            ls.classList.add("fade-out");
+            setTimeout(() => { ls.style.display = "none"; }, 500);
+            updateSubFilters();
+            renderInfoPanel();
+            renderCards(safeData);
+        }, 1100);
+    });
+
+    function openModal(uid) {
+        const item = safeData.find(d => (d.uid || d.ref) === uid);
+        if (!item) return;
+        document.getElementById("modal-ref").textContent = item.uid || item.ref;
+        document.getElementById("modal-img-wrap").innerHTML =
+            `<div class="modal-img"><img src="images/${item.ref}.png" alt="${item.ref}"
+                onerror="this.onerror=null;this.parentNode.innerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#ccc;&quot;>이미지 없음</div>'"></div>`;
+        document.getElementById("modal-remark").textContent = item.remark || "";
+        document.getElementById("modal-tags").innerHTML =
+            genderTag(item.gender, item.ref) +
+            (item.fabric ? fabricTag(item.fabric) : "") +
+            `<span class="tag tag-line">${item.line}</span>` +
+            fitTag(item.fit) +
+            (item.line_style ? lineStyleTag(item.line_style) : "") +
+            (item.subtype ? subtypeTag(item.subtype) : "");
+        document.getElementById("modal-table").innerHTML =
+            Object.entries(item.measures)
+                  .map(([k,v]) => `<tr><td>${k}</td><td>${v}</td></tr>`)
+                  .join("");
+        document.getElementById("modal-overlay").classList.add("open");
+    }
+
+    function closeModal() {
+        document.getElementById("modal-overlay").classList.remove("open");
+    }
+    document.getElementById("modal-overlay").addEventListener("click", e => {
+        if (e.target === document.getElementById("modal-overlay")) closeModal();
+    });
+    document.addEventListener("keydown", e => {
+        if (e.key === "Escape") closeModal();
+    });
+
+</script>
+</body>
+</html>
