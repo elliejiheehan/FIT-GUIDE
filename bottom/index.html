@@ -427,7 +427,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title"><span class="emoji">👖</span>Bottom Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 04월 23일 16:43</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 04월 23일 16:47</div>
 </header>
 
 <!-- CATEGORY TABS -->
@@ -652,9 +652,13 @@
         fitPill.style.display = showFit ? "" : "none";
         if (showFit) {
             const filtered = currentTab ? safeData.filter(i => i.line === currentTab) : safeData;
-            const values = [...new Set(
+            const SK_ORDER = ["A-LINE", "FLARE", "LONG", "CLASSIC PLEATS", "MICRO PLEATS", "WIDE PLEATS"];
+            const rawValues = [...new Set(
                 filtered.map(i => (currentTab === "SK" || currentTab === "LG") ? i.subtype : i.fit).filter(Boolean)
-            )].sort();
+            )];
+            const values = currentTab === "SK"
+                ? SK_ORDER.filter(v => rawValues.includes(v))
+                : rawValues.sort();
             const cur = fitSel.value;
             fitSel.innerHTML = `<option value="">All</option>` +
                 values.map(v => `<option value="${v}">${v}</option>`).join("");
