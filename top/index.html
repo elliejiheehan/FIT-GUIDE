@@ -277,6 +277,7 @@
             border-top: 1px solid var(--border);
             padding-top: 8px;
             line-height: 1.5;
+            font-family: var(--sans);
         }
 
         /* ── MODAL ── */
@@ -323,9 +324,9 @@
         .modal-img img { width: 100%; object-fit: contain; object-position: center top; max-height: 420px; display: block; border-radius: 8px; }
         .modal-info h2 { font-size: 15px; font-weight: 500; margin-bottom: 8px; font-family: var(--mono); letter-spacing: 0.06em; }
         .modal-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
-        .modal-table tr td { padding: 5px 8px; font-size: 11px; border-bottom: 1px solid var(--border); font-family: var(--mono); }
-        .modal-table tr td:first-child { color: var(--text-muted); width: 55%; }
-        .modal-table tr td:last-child { font-weight: 500; color: var(--text-primary); }
+        .modal-table tr td { padding: 5px 8px; font-size: 11px; border-bottom: 1px solid var(--border); font-family: var(--sans); }
+        .modal-table tr td:first-child { color: var(--text-muted); width: 55%; font-family: var(--sans); }
+        .modal-table tr td:last-child { font-weight: 500; color: var(--text-primary); font-family: var(--mono); }
 
         /* ── EMPTY STATE ── */
         .empty {
@@ -395,7 +396,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 19일 18:12</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 19일 18:17</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -442,7 +443,7 @@
             <div class="modal-info">
                 <div class="tags" id="modal-tags"></div>
                 <h2 style="display:none" id="modal-ref-hidden"></h2>
-                <div id="modal-remark" style="font-size:11px;color:#999;margin-bottom:10px;font-family:var(--mono);font-style:italic;"></div>
+                <div id="modal-remark" style="font-size:11px;color:#999;margin-bottom:10px;font-family:var(--sans);font-style:italic;"></div>
                 <table class="modal-table" id="modal-table"></table>
             </div>
         </div>
