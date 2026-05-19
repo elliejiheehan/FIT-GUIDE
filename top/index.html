@@ -187,7 +187,7 @@
         .btn-reset:hover { border-color: var(--accent-m); color: var(--accent); }
 
         /* ── RESULTS AREA ── */
-        .results-area { padding: 0 40px 48px; }
+        .results-area { padding: 0 28px 48px; }
 
         .count-bar {
             display: flex;
@@ -338,18 +338,18 @@
         }
 
 
-        /* ── SIZE GUIDE ── */
-        .size-guide-section { border-bottom: 1px solid var(--border); background: #fff; }
-        .sg-inner { display: flex; }
+        /* ── MAIN BODY LAYOUT ── */
+        .main-body { display: flex; align-items: stretch; }
         .sg-sidebar {
-            width: 80px;
+            width: 100px;
             flex-shrink: 0;
             border-right: 1px solid var(--border);
             padding: 16px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 30px;
+            background: #fff;
         }
         .sg-sidebar-title {
             font-family: var(--mono);
@@ -358,19 +358,13 @@
             letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--text-muted);
-            margin-bottom: 8px;
-            padding: 0 8px;
-            text-align: center;
+            margin-bottom: 4px;
         }
-        .sg-main { flex: 1; padding: 16px 28px 20px; min-width: 0; }
-        .sg-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-        .sg-title { font-size: 13px; font-weight: 500; letter-spacing: 0.1em; color: var(--text-primary); font-family: var(--mono); text-transform: uppercase; }
-        .sg-toggle { background: none; border: 1px solid var(--border); border-radius: 100px; padding: 4px 12px; font-size: 10px; font-weight: 500; color: var(--text-muted); cursor: pointer; font-family: var(--mono); }
         .sg-line-btn {
-            width: 48px; height: 34px;
+            width: 64px; height: 30px;
             border-radius: 6px;
             border: 1px solid var(--border);
-            font-size: 10px; font-weight: 500;
+            font-size: 10px; font-weight: 700;
             cursor: pointer;
             background: transparent;
             color: var(--text-muted);
@@ -381,11 +375,22 @@
         }
         .sg-line-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
         .sg-line-btn:hover:not(.active) { border-color: var(--accent-m); color: var(--accent); background: var(--accent-l); }
+
+        .main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+
+        /* ── SIZE GUIDE INNER ── */
+        .size-guide-inner {
+            border-bottom: 1px solid var(--border);
+            background: #fff;
+            padding: 16px 28px 20px;
+        }
+        .sg-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .sg-title { font-size: 13px; font-weight: 500; letter-spacing: 0.1em; color: var(--text-primary); font-family: var(--mono); text-transform: uppercase; }
+        .sg-toggle { background: none; border: 1px solid var(--border); border-radius: 100px; padding: 4px 12px; font-size: 10px; font-weight: 500; color: var(--text-muted); cursor: pointer; font-family: var(--mono); }
         .sg-content { display: none; }
         .sg-content.active { display: block; }
-        .sg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .sg-col-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--mono); }
-        .sg-table-wrap { overflow-x: auto; border-radius: 6px; border: 1px solid var(--border); }
+        .sg-table-wrap { overflow-x: auto; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 14px; }
         .sg-table { width: 100%; border-collapse: collapse; font-size: 11px; }
         .sg-table thead tr { background: var(--off-white); }
         .sg-table thead th { padding: 8px 12px; text-align: center; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; color: var(--text-muted); border-bottom: 1px solid var(--border); white-space: nowrap; font-family: var(--mono); }
@@ -395,6 +400,7 @@
         .sg-table tbody tr:hover { background: var(--off-white); }
         .sg-table tbody td { padding: 6px 12px; text-align: center; color: var(--text-primary); font-size: 11px; font-family: var(--mono); }
         .sg-table tbody td:first-child { text-align: left; font-weight: 500; color: var(--text-secondary); white-space: nowrap; font-size: 10px; font-family: var(--sans); }
+        .sg-divider { height: 1px; background: var(--border); margin: 10px 0 14px; }
         .fit-pill { display: inline-block; font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 100px; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.15s; font-family: var(--mono); }
         .fit-pill:hover { opacity: 0.75; }
         .fp-regular   { background: #ccfbf1; color: #0f766e; }
@@ -402,15 +408,14 @@
         .fp-over      { background: #fee2e2; color: #991b1b; }
         .fp-slim      { background: #ede9fe; color: #6d28d9; }
         .fp-sporty    { background: #d1fae5; color: #065f46; }
-        @media(max-width: 900px) { .sg-grid { grid-template-columns: 1fr; } .sg-sidebar { width: 60px; } }
         @media(max-width: 640px) {
             header { padding: 18px 20px; }
+            .main-body { flex-direction: column; }
+            .sg-sidebar { width: 100%; flex-direction: row; border-right: none; border-bottom: 1px solid var(--border); padding: 10px 16px; flex-wrap: wrap; gap: 6px; }
             .results-area { padding: 0 16px 40px; }
             .grid { grid-template-columns: 1fr 1fr; gap: 12px; }
             .card-img { height: 220px; }
             .modal-grid { grid-template-columns: 1fr; }
-            .sg-inner { flex-direction: column; }
-            .sg-sidebar { width: 100%; flex-direction: row; border-right: none; border-bottom: 1px solid var(--border); padding: 10px 16px; flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -428,7 +433,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 19일 18:32</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 19일 18:48</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -440,14 +445,16 @@
 </div>
 
 
-<!-- SIZE GUIDE -->
-<div class="size-guide-section" id="size-guide-section">
-    <div class="sg-inner">
-        <div class="sg-sidebar">
-            <div class="sg-sidebar-title">LINE</div>
-            <div id="sg-line-btns"></div>
-        </div>
-        <div class="sg-main">
+<!-- MAIN BODY: sidebar + content -->
+<div class="main-body">
+    <div class="sg-sidebar" id="size-guide-section">
+        <div class="sg-sidebar-title">LINE</div>
+        <div id="sg-line-btns"></div>
+    </div>
+
+    <div class="main-content">
+        <!-- SIZE GUIDE -->
+        <div class="size-guide-inner" id="size-guide-inner">
             <div class="sg-header">
                 <div class="sg-title">Fit별 Spec Guide</div>
                 <button class="sg-toggle" id="sg-toggle-btn" onclick="toggleGuide()">접기 ▲</button>
@@ -456,13 +463,13 @@
                 <div id="sg-panels"></div>
             </div>
         </div>
-    </div>
-</div>
 
-<!-- RESULTS -->
-<div class="results-area" id="results-area">
-    <div class="count-bar"><strong id="count">0</strong>&nbsp;items&nbsp;&nbsp;<button class="btn-reset" onclick="resetAll()" style="margin-left:8px">↺ RESET</button></div>
-    <div class="grid" id="grid"></div>
+        <!-- RESULTS -->
+        <div class="results-area" id="results-area">
+            <div class="count-bar"><strong id="count">0</strong>&nbsp;items&nbsp;&nbsp;<button class="btn-reset" onclick="resetAll()" style="margin-left:8px">↺ RESET</button></div>
+            <div class="grid" id="grid"></div>
+        </div>
+    </div>
 </div>
 
 <!-- MODAL -->
@@ -625,10 +632,11 @@
             const menHtml = menGroup ? buildSgTable(menGroup) : '<div style="color:#bbb;font-size:12px;padding:8px">데이터 없음</div>';
             const womenHtml = womenGroup ? buildSgTable(womenGroup) : '<div style="color:#bbb;font-size:12px;padding:8px">데이터 없음</div>';
             return `<div class="sg-content${i===0?' active':''}" data-line="${l.code}">
-                <div class="sg-grid">
-                    <div><div class="sg-col-label">👔 Men — ${l.label}</div>${menHtml}</div>
-                    <div><div class="sg-col-label">👗 Women — ${l.label}</div>${womenHtml}</div>
-                </div>
+                <div class="sg-col-label">👔 Men — ${l.label}</div>
+                ${menHtml}
+                <div class="sg-divider"></div>
+                <div class="sg-col-label">👗 Women — ${l.label}</div>
+                ${womenHtml}
             </div>`;
         }).join("");
     }
@@ -657,10 +665,8 @@
     function toggleGuide() {
         const body = document.getElementById("sg-body");
         const btn = document.getElementById("sg-toggle-btn");
-        const sidebar = document.querySelector(".sg-sidebar");
         const hidden = body.style.display === "none";
         body.style.display = hidden ? "" : "none";
-        if (sidebar) sidebar.style.display = hidden ? "" : "none";
         btn.textContent = hidden ? "접기 ▲" : "펼치기 ▼";
     }
 
