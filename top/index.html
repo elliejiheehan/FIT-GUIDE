@@ -19,10 +19,10 @@
             --text-primary: #1A1A1A;
             --text-secondary: #6B6B6B;
             --text-muted: #A8A8A8;
-            --accent: #4CBB17;
-            --accent-l: #EEFAE3;
-            --accent-m: #6DD63A;
-            --tag-line-bg: #4CBB17;
+            --accent: #2D4A3E;
+            --accent-l: #E8F0EC;
+            --accent-m: #4A7C68;
+            --tag-line-bg: #2D4A3E;
             --tag-line-color: #ffffff;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
             --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
@@ -340,18 +340,51 @@
 
         /* ── SIZE GUIDE ── */
         .size-guide-section { border-bottom: 1px solid var(--border); background: #fff; }
-        .sg-inner { padding: 16px 40px 20px; }
-        .sg-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+        .sg-inner { display: flex; }
+        .sg-sidebar {
+            width: 80px;
+            flex-shrink: 0;
+            border-right: 1px solid var(--border);
+            padding: 16px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .sg-sidebar-title {
+            font-family: var(--mono);
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            padding: 0 8px;
+            text-align: center;
+        }
+        .sg-main { flex: 1; padding: 16px 28px 20px; min-width: 0; }
+        .sg-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
         .sg-title { font-size: 13px; font-weight: 500; letter-spacing: 0.1em; color: var(--text-primary); font-family: var(--mono); text-transform: uppercase; }
         .sg-toggle { background: none; border: 1px solid var(--border); border-radius: 100px; padding: 4px 12px; font-size: 10px; font-weight: 500; color: var(--text-muted); cursor: pointer; font-family: var(--mono); }
-        .sg-line-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
-        .sg-line-btn { padding: 4px 14px; border-radius: 100px; border: 1px solid var(--border); font-size: 10px; font-weight: 500; cursor: pointer; background: transparent; color: var(--text-muted); font-family: var(--mono); transition: all 0.15s; letter-spacing: 0.08em; }
+        .sg-line-btn {
+            width: 48px; height: 34px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 10px; font-weight: 500;
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: var(--mono);
+            transition: all 0.15s;
+            letter-spacing: 0.08em;
+            display: flex; align-items: center; justify-content: center;
+        }
         .sg-line-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-        .sg-line-btn:hover:not(.active) { border-color: var(--accent-m); color: var(--accent); }
+        .sg-line-btn:hover:not(.active) { border-color: var(--accent-m); color: var(--accent); background: var(--accent-l); }
         .sg-content { display: none; }
         .sg-content.active { display: block; }
         .sg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .sg-col-label { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-primary); margin-bottom: 6px; }
+        .sg-col-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 6px; font-family: var(--mono); }
         .sg-table-wrap { overflow-x: auto; border-radius: 6px; border: 1px solid var(--border); }
         .sg-table { width: 100%; border-collapse: collapse; font-size: 11px; }
         .sg-table thead tr { background: var(--off-white); }
@@ -361,7 +394,7 @@
         .sg-table tbody tr:last-child { border-bottom: none; }
         .sg-table tbody tr:hover { background: var(--off-white); }
         .sg-table tbody td { padding: 6px 12px; text-align: center; color: var(--text-primary); font-size: 11px; font-family: var(--mono); }
-        .sg-table tbody td:first-child { text-align: left; font-weight: 500; color: var(--text-secondary); white-space: nowrap; font-size: 10px; }
+        .sg-table tbody td:first-child { text-align: left; font-weight: 500; color: var(--text-secondary); white-space: nowrap; font-size: 10px; font-family: var(--sans); }
         .fit-pill { display: inline-block; font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 100px; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.15s; font-family: var(--mono); }
         .fit-pill:hover { opacity: 0.75; }
         .fp-regular   { background: #ccfbf1; color: #0f766e; }
@@ -369,16 +402,15 @@
         .fp-over      { background: #fee2e2; color: #991b1b; }
         .fp-slim      { background: #ede9fe; color: #6d28d9; }
         .fp-sporty    { background: #d1fae5; color: #065f46; }
-        @media(max-width: 900px) { .sg-grid { grid-template-columns: 1fr; } }
+        @media(max-width: 900px) { .sg-grid { grid-template-columns: 1fr; } .sg-sidebar { width: 60px; } }
         @media(max-width: 640px) {
             header { padding: 18px 20px; }
-            .hero { padding: 48px 20px 40px; }
-            .hero.compact { padding: 16px 20px 0; }
             .results-area { padding: 0 16px 40px; }
             .grid { grid-template-columns: 1fr 1fr; gap: 12px; }
             .card-img { height: 220px; }
             .modal-grid { grid-template-columns: 1fr; }
-            .modal { padding: 24px 20px; }
+            .sg-inner { flex-direction: column; }
+            .sg-sidebar { width: 100%; flex-direction: row; border-right: none; border-bottom: 1px solid var(--border); padding: 10px 16px; flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -396,7 +428,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 19일 18:23</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 19일 18:32</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -411,13 +443,18 @@
 <!-- SIZE GUIDE -->
 <div class="size-guide-section" id="size-guide-section">
     <div class="sg-inner">
-        <div class="sg-header">
-            <div class="sg-title">📏 Fit별 Spec Guide</div>
-            <button class="sg-toggle" id="sg-toggle-btn" onclick="toggleGuide()">접기 ▲</button>
+        <div class="sg-sidebar">
+            <div class="sg-sidebar-title">LINE</div>
+            <div id="sg-line-btns"></div>
         </div>
-        <div id="sg-body">
-            <div class="sg-line-btns" id="sg-line-btns"></div>
-            <div id="sg-panels"></div>
+        <div class="sg-main">
+            <div class="sg-header">
+                <div class="sg-title">Fit별 Spec Guide</div>
+                <button class="sg-toggle" id="sg-toggle-btn" onclick="toggleGuide()">접기 ▲</button>
+            </div>
+            <div id="sg-body">
+                <div id="sg-panels"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -568,8 +605,7 @@
         const panelWrap = document.getElementById("sg-panels");
         if (!btnWrap || !panelWrap) return;
 
-        // 공통 LINE 목록 - 고정 순서: RS, RL, MT, PQ, TR, WJ
-        const lineOrder = ["RS","RL","MT","PQ","TR","WJ","SL"];
+        const lineOrder = ["SL","RS","RL","MT","PQ","TR","WJ"];
         const lineMap = {};
         [...safeSG.men, ...safeSG.women].forEach(g => {
             const code = g.lineCode || g.line.split(' ')[0];
@@ -621,8 +657,10 @@
     function toggleGuide() {
         const body = document.getElementById("sg-body");
         const btn = document.getElementById("sg-toggle-btn");
+        const sidebar = document.querySelector(".sg-sidebar");
         const hidden = body.style.display === "none";
         body.style.display = hidden ? "" : "none";
+        if (sidebar) sidebar.style.display = hidden ? "" : "none";
         btn.textContent = hidden ? "접기 ▲" : "펼치기 ▼";
     }
 
