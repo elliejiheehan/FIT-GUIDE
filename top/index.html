@@ -385,13 +385,14 @@
             letter-spacing: 0.08em;
             display: flex; align-items: center; justify-content: center;
         }
-        .sg-filter-btn.active { color: #fff; border-color: transparent; }
-        .sg-gender-btn[data-val="MEN"].active    { background: #1d4ed8; color: #fff; }
-        .sg-gender-btn[data-val="WOMEN"].active  { background: #be185d; color: #fff; }
-        .sg-fit-btn[data-val="SLIM"].active      { background: #6d28d9; color: #fff; }
-        .sg-fit-btn[data-val="REGULAR"].active   { background: #0f766e; color: #fff; }
-        .sg-fit-btn[data-val="SEMI-OVER"].active { background: #92400e; color: #fff; }
-        .sg-fit-btn[data-val="OVER"].active      { background: #991b1b; color: #fff; }
+        .sg-filter-btn.active { color: #fff !important; border-color: transparent !important; }
+        .sg-gender-btn[data-val="MEN"].active    { background: #1d4ed8 !important; color: #fff !important; border-color: #1d4ed8 !important; }
+        .sg-gender-btn[data-val="WOMEN"].active  { background: #be185d !important; color: #fff !important; border-color: #be185d !important; }
+        .sg-fit-btn[data-val="SLIM"].active      { background: #6d28d9 !important; color: #fff !important; border-color: #6d28d9 !important; }
+        .sg-fit-btn[data-val="REGULAR"].active   { background: #0f766e !important; color: #fff !important; border-color: #0f766e !important; }
+        .sg-fit-btn[data-val="SEMI-OVER"].active { background: #92400e !important; color: #fff !important; border-color: #92400e !important; }
+        .sg-fit-btn[data-val="OVER"].active      { background: #991b1b !important; color: #fff !important; border-color: #991b1b !important; }
+        .sg-line-btn.active                      { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
 
         /* BOTTOM 버튼 */
         .sg-b-btn {
@@ -555,7 +556,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 14:45</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 14:47</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
