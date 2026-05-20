@@ -552,14 +552,11 @@
 </div>
 
 <header>
-    <div style="display:flex;align-items:center;gap:16px;">
-        <button id="landing-back-btn" onclick="goToLanding()" style="display:none;background:rgba(255,255,255,0.15);border:none;color:#fff;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:10px;font-family:var(--sans);letter-spacing:0.08em;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">← HOME</button>
-        <div>
-            <div class="header-brand">Sergio Tacchini</div>
-            <div class="header-title">Fit Guide</div>
-        </div>
+    <div>
+        <div class="header-brand">Sergio Tacchini</div>
+        <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 18:26</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 18:31</div>
 </header>
 
 <!-- LANDING SCREEN -->
@@ -1325,7 +1322,7 @@
     const POM_CODE_MAP = {
         "Back Body Length":      "LG21",
         "Chest Circumference":   "CH10",
-        "Waist":                 "WA20",
+        "Waist":                 "WA10",
         "Sweep Straight":        "SW10",
         "Neck Width":            "NK10",
         "Front Neck Drop":       "NK30",
@@ -1381,14 +1378,16 @@
             lineStyleHtml;
 
         const boldPoms = ["Back Body Length", "Chest Circumference", "Across Shoulder",
-                          "Waist", "Low Hip", "Outseam"];
+                          "Low Hip", "Outseam"];
+        const isBottomModal = ['SP','PT','SK','LG'].includes(item.line);
         document.getElementById("modal-table").innerHTML =
             Object.entries(item.measures)
                   .map(([k,v]) => {
-                      const isHighlight = boldPoms.includes(k);
+                      const isHighlight = boldPoms.includes(k) || (k === "Waist" && isBottomModal);
                       const style   = isHighlight ? ' style="background:#F0F7F4;"' : '';
                       const tdStyle = isHighlight ? ' style="color:#2D4A3E;font-weight:500"' : '';
-                      const pom = POM_CODE_MAP[k] ? `<span style="font-size:9px;color:#2D4A3E;font-weight:700;margin-right:5px;letter-spacing:0.04em;">${POM_CODE_MAP[k]}</span>` : '';
+                      const pomCode = k === "Waist" ? (isBottomModal ? "WA20" : "WA10") : POM_CODE_MAP[k];
+                      const pom = pomCode ? `<span style="font-size:9px;color:#2D4A3E;font-weight:700;margin-right:5px;letter-spacing:0.04em;">${pomCode}</span>` : '';
                       return `<tr${style}><td${tdStyle}>${pom}${k}</td><td${tdStyle}>${v}</td></tr>`;
                   })
                   .join("");
