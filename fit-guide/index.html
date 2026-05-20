@@ -556,7 +556,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 17:30</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 17:32</div>
 </header>
 
 <!-- FILTERS (hidden) -->
@@ -1313,16 +1313,17 @@
                 onerror="this.onerror=null;this.parentNode.innerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#ccc;&quot;>이미지 없음</div>'"></div>`;
         document.getElementById("modal-remark").textContent = item.remark || "";
 
-        // 태그: BOTTOM은 fabric/subtype/line_style도 표시
-        let extraTags = '';
-        if (item.fabric)     extraTags += `<span class="tag" style="background:#f1f5f9;color:#475569">${item.fabric}</span>`;
-        if (item.line_style) extraTags += `<span class="tag" style="background:#f1f5f9;color:#475569">${item.line_style}</span>`;
-        if (item.subtype)    extraTags += `<span class="tag" style="background:#f1f5f9;color:#475569">${item.subtype}</span>`;
+        // 태그 순서: 성별 → FABRIC → LINE → FIT → LINE_STYLE
+        const isBottomItem = ['SP','PT','SK','LG'].includes(item.line);
+        const fabricTagHtml = item.fabric ? fabricTag(item.fabric) : '';
+        const fitTagHtml = isBottomItem ? fitTag(item.subtype || item.fit) : fitTag(item.fit);
+        const lineStyleHtml = item.line_style ? lineStyleTag(item.line_style) : '';
         document.getElementById("modal-tags").innerHTML =
             genderTag(item.gender, item.ref) +
+            fabricTagHtml +
             `<span class="tag tag-line">${item.line}</span>` +
-            fitTag(item.fit) +
-            extraTags;
+            fitTagHtml +
+            lineStyleHtml;
 
         const boldPoms = ["Back Body Length", "Chest Circumference", "Across Shoulder",
                           "Waist", "Low Hip", "Outseam"];
