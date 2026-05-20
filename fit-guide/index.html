@@ -556,13 +556,13 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 15:12</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 15:22</div>
 </header>
 
-<!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
+<!-- FILTERS (hidden) -->
 <div style="display:none">
     <select id="filter-gender"><option value="">All</option><option value="MEN">MEN</option><option value="WOMEN">WOMEN</option></select>
-    <select id="filter-line"><option value="">All</option><option value="RS">RS</option><option value="MT">MT</option><option value="PQ">PQ</option><option value="RL">RL</option><option value="TR">TR</option><option value="WJ">WJ</option><option value="SL">SL</option></select>
+    <select id="filter-line"><option value="">All</option><option value="SL">SL</option><option value="RS">RS</option><option value="MT">MT</option><option value="PQ">PQ</option><option value="RL">RL</option><option value="TR">TR</option><option value="WJ">WJ</option></select>
     <select id="filter-fit"><option value="">All</option><option value="SLIM">SLIM</option><option value="REGULAR">REGULAR</option><option value="SEMI-OVER">SEMI-OVER</option><option value="OVER">OVER</option></select>
     <input type="text" id="search-input">
 </div>
@@ -634,6 +634,15 @@
         <div class="sg-sidebar-divider"></div>
         <!-- RESET -->
         <button class="sg-reset-btn" onclick="resetAll()">↺ RESET</button>
+
+        <div class="sg-sidebar-divider"></div>
+        <!-- 검색 -->
+        <div class="sg-sidebar-title">SEARCH</div>
+        <div style="width:70%;position:relative;">
+            <input type="text" id="search-input-side" placeholder="품번 검색..."
+                style="width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:10px;font-family:var(--sans);color:var(--text-primary);background:#fff;outline:none;"
+                oninput="applyFilter()">
+        </div>
     </div>
 
     <div class="main-content">
@@ -645,6 +654,12 @@
             <div id="sg-body">
                 <div id="sg-panels"></div>
             </div>
+        </div>
+
+        <!-- 활성 필터 표시 바 -->
+        <div id="active-filter-bar" style="display:none;padding:10px 28px;border-bottom:1px solid var(--border);background:#fff;flex-wrap:wrap;gap:6px;align-items:center;">
+            <span style="font-size:10px;color:var(--text-muted);font-family:var(--sans);letter-spacing:0.08em;text-transform:uppercase;margin-right:4px;">필터</span>
+            <div id="active-filter-chips" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
         </div>
 
         <!-- RESULTS -->
@@ -792,7 +807,11 @@
         const grid = document.getElementById("grid");
         document.getElementById("count").textContent = items.length;
         if (!items.length) {
-            grid.innerHTML = '<div class="empty">검색 결과가 없습니다.</div>';
+            grid.innerHTML = `<div class="empty" style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text-muted);font-family:var(--sans);">
+                <div style="font-size:32px;margin-bottom:12px;">🔍</div>
+                <div style="font-size:14px;font-weight:500;margin-bottom:6px;color:var(--text-secondary);">결과가 없어요</div>
+                <div style="font-size:12px;">필터 조건을 바꾸거나 RESET 해보세요</div>
+            </div>`;
             return;
         }
         grid.innerHTML = items.map((item, i) => {
@@ -834,7 +853,6 @@
                         <span class="tag tag-line">${item.line}</span>
                         ${fitTag(item.fit)}
                         ${item.fabric ? `<span class="tag tag-fabric-${item.fabric.toLowerCase()}">${item.fabric}</span>` : ''}
-                        ${item.subtype ? `<span class="tag" style="background:#f1f5f9;color:#475569;font-size:9px">${item.subtype}</span>` : ''}
                     </div>
                     <div class="measures">${measuresHtml}</div>
                     ${item.remark ? `<div class="remark">${item.remark}</div>` : ""}
@@ -843,12 +861,52 @@
         }).join("");
     }
 
-    function applyFilter() {
+    function getSearchQuery() {
+        const side = document.getElementById("search-input-side");
+        return side ? side.value.toLowerCase().trim() : '';
+    }
+
+    function updateActiveFilterBar() {
+        const bar = document.getElementById("active-filter-bar");
+        const chips = document.getElementById("active-filter-chips");
+        const filters = [];
+        const q = getSearchQuery();
+
         if (currentTab === 'top') {
             const line   = document.getElementById("filter-line").value;
             const gender = document.getElementById("filter-gender").value;
             const fit    = document.getElementById("filter-fit").value;
-            const q      = document.getElementById("search-input").value.toLowerCase().trim();
+            if (gender) filters.push({label: gender, color: gender==='MEN'?'#1d4ed8':'#be185d'});
+            if (line)   filters.push({label: line,   color: '#2D4A3E'});
+            if (fit)    filters.push({label: fit,    color: '#0f766e'});
+        } else {
+            const {gender, line, fabric, fit} = bottomFilter;
+            if (gender) filters.push({label: gender, color: gender==='MEN'?'#1d4ed8':'#be185d'});
+            if (line)   filters.push({label: line,   color: '#2D4A3E'});
+            if (fabric) filters.push({label: fabric, color: fabric==='JERSEY'?'#0369a1':'#b45309'});
+            if (fit)    filters.push({label: fit,    color: '#0f766e'});
+        }
+        if (q) filters.push({label: `"${q}"`, color: '#6b7280'});
+
+        if (filters.length) {
+            bar.style.display = 'flex';
+            chips.innerHTML = filters.map(f =>
+                `<span style="display:inline-flex;align-items:center;gap:4px;background:${f.color}18;color:${f.color};border:1px solid ${f.color}40;border-radius:100px;padding:3px 10px;font-size:10px;font-family:var(--sans);font-weight:500;">${f.label}</span>`
+            ).join('');
+        } else {
+            bar.style.display = 'none';
+        }
+    }
+
+    function applyFilter() {
+        const q = getSearchQuery();
+
+        if (currentTab === 'top') {
+            const line   = document.getElementById("filter-line").value;
+            const gender = document.getElementById("filter-gender").value;
+            const fit    = document.getElementById("filter-fit").value;
+
+            updateActiveFilterBar();
 
             if (!line && !gender && !fit && !q) {
                 document.getElementById("grid").innerHTML = '';
@@ -865,9 +923,9 @@
                        (!q      || (item.uid || item.ref).toLowerCase().includes(q));
             }));
         } else {
-            // BOTTOM
             const { gender, line, fabric, fit } = bottomFilter;
-            const q = document.getElementById("search-input").value.toLowerCase().trim();
+
+            updateActiveFilterBar();
 
             if (!gender && !line && !fabric && !fit && !q) {
                 document.getElementById("grid").innerHTML = '';
@@ -875,7 +933,6 @@
                 return;
             }
             renderCards(safeDataBottom.filter(item => {
-                // SK FIT은 subtype으로 매핑
                 const itemFit = item.line === 'SK' ? item.subtype :
                                 item.line === 'LG' ? item.subtype : item.fit;
                 return (!gender || item.gender === gender) &&
@@ -938,6 +995,8 @@
         document.getElementById("filter-gender").value = "";
         document.getElementById("filter-fit").value    = "";
         document.getElementById("search-input").value  = "";
+        const sideSearch = document.getElementById("search-input-side");
+        if (sideSearch) sideSearch.value = "";
         document.querySelectorAll('.sg-line-btn, .sg-gender-btn, .sg-fit-btn')
             .forEach(b => b.classList.remove('active'));
         bottomFilter.gender = ''; bottomFilter.line = '';
@@ -946,6 +1005,7 @@
             .forEach(b => b.classList.remove('active'));
         document.getElementById("grid").innerHTML = '';
         document.getElementById("count").textContent = '0';
+        document.getElementById("active-filter-bar").style.display = 'none';
     }
 
     ["filter-line","filter-gender","filter-fit"].forEach(id =>
@@ -967,7 +1027,7 @@
         const lc = group.lineCode || group.line.split(' ')[0];
         const gc = group.gender || '';
         const fitCols = group.fits.map(f =>
-            `<th><span class="fit-pill ${FP_CLASS[f.toUpperCase()]||'fp-regular'}" onclick="filterByFit('${f.toUpperCase()}','${lc}','${gc}')" style="cursor:pointer" title="${lc} ${f} 필터">${f}</span></th>`
+            `<th><span class="fit-pill ${FP_CLASS[f.toUpperCase()]||'fp-regular'}">${f}</span></th>`
         ).join("");
         const allowedPoms = ["Chest Circumference", "Back Body Length"];
         const poms = Object.keys(group.measures).filter(p => allowedPoms.includes(p));
