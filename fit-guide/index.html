@@ -565,7 +565,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 15:52</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 16:03</div>
 </header>
 
 <!-- FILTERS (hidden) -->
@@ -580,11 +580,6 @@
 <!-- MAIN BODY: sidebar + content -->
 <div class="main-body">
     <div class="sg-sidebar" id="size-guide-section">
-
-        <!-- HOW TO MEASURE 버튼 -->
-        <button class="sg-spec-btn" id="sg-htm-btn" onclick="toggleHowToMeasure(this)" style="border-color:var(--accent-m);color:var(--accent);">HOW TO<br>MEASURE</button>
-
-        <div class="sg-sidebar-divider"></div>
 
         <!-- SPEC GUIDE 버튼 -->
         <button class="sg-spec-btn" id="sg-spec-btn" onclick="toggleSpecGuide(this)">SPEC<br>GUIDE</button>
@@ -660,32 +655,12 @@
     </div>
 
     <div class="main-content">
-        <!-- HOW TO MEASURE (기본 숨김) -->
-        <div id="htm-panel" style="display:none;">
-            <div style="background:var(--accent);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;">
-                <div>
-                    <div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:4px;">Sergio Tacchini</div>
-                    <div style="font-size:14px;font-weight:500;color:#fff;letter-spacing:0.08em;">How to Measure</div>
-                </div>
-            </div>
-            <div style="display:flex;gap:8px;padding:12px 28px;border-bottom:1px solid var(--border);background:#fff;flex-wrap:wrap;">
-                <button class="htm-tab-btn active" data-cat="top"    onclick="switchHtmTab('top',this)">TOP</button>
-                <button class="htm-tab-btn"         data-cat="pt"     onclick="switchHtmTab('pt',this)">PANTS</button>
-                <button class="htm-tab-btn"         data-cat="sk"     onclick="switchHtmTab('sk',this)">SKIRT</button>
-                <button class="htm-tab-btn"         data-cat="lg"     onclick="switchHtmTab('lg',this)">LEGGING</button>
-                <button class="htm-tab-btn"         data-cat="op"     onclick="switchHtmTab('op',this)">OP/DRESS</button>
-            </div>
-            <div id="htm-content" style="padding:20px 28px;">
-                <img id="htm-img" src="how-to-measure/htm-top.png" alt="How to Measure"
-                    style="width:100%;border-radius:8px;border:1px solid var(--border);">
-            </div>
-        </div>
-
         <!-- SIZE GUIDE (기본 숨김) -->
         <div class="size-guide-inner" id="size-guide-inner" style="display:none;">
             <div class="sg-header">
                 <div class="sg-title">Fit별 Spec Guide</div>
             </div>
+            <div id="sg-line-filter-tabs" style="display:flex;gap:6px;padding:8px 28px 12px;flex-wrap:wrap;border-bottom:1px solid var(--border);"></div>
             <div id="sg-body">
                 <div id="sg-panels"></div>
             </div>
@@ -781,15 +756,10 @@
         currentTab = tab;
         document.querySelectorAll('.sg-tab-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
-        // 필터 섹션 전환
         document.getElementById('top-filters').style.display    = tab === 'top'    ? 'flex' : 'none';
         document.getElementById('bottom-filters').style.display = tab === 'bottom' ? 'flex' : 'none';
-
-        // SPEC GUIDE 닫기
         document.getElementById('size-guide-inner').style.display = 'none';
         document.getElementById('sg-spec-btn').classList.remove('active');
-
         resetAll();
     }
 
@@ -1022,7 +992,7 @@
             document.getElementById("grid").innerHTML = '';
             document.getElementById("count").textContent = '0';
             if (currentTab === 'top') renderSizeGuide();
-            else renderBottomSizeGuide();
+            else document.getElementById("size-guide-inner").style.display = "none";
         }
     }
 
@@ -1094,9 +1064,12 @@
         return `<div class="sg-table-wrap"><table class="sg-table"><thead><tr><th>POM</th>${fitCols}</tr></thead><tbody>${bodyRows}</tbody></table></div>`;
     }
 
+    let sgActiveLine = null;
+
     function renderSizeGuide() {
         const btnWrap = document.getElementById("sg-line-btns");
         const panelWrap = document.getElementById("sg-panels");
+        const tabWrap = document.getElementById("sg-line-filter-tabs");
         if (!btnWrap || !panelWrap) return;
 
         const lineOrder = ["SL","RS","RL","MT","PQ","TR","WJ"];
@@ -1107,11 +1080,19 @@
         });
         const allLines = lineOrder.filter(c => lineMap[c]).map(c => ({code: c, label: lineMap[c]}));
 
-        btnWrap.innerHTML = allLines.map((l, i) =>
+        btnWrap.innerHTML = allLines.map((l) =>
             `<button class="sg-line-btn" data-val="${l.code}" onclick="toggleSideFilter('line','${l.code}',this)">${l.code}</button>`
         ).join("");
 
-        panelWrap.innerHTML = allLines.map((l, i) => {
+        // 라인 필터 탭
+        if (tabWrap) {
+            tabWrap.innerHTML = `<button class="htm-tab-btn active" onclick="filterSgLine(null,this)">ALL</button>` +
+                allLines.map(l =>
+                    `<button class="htm-tab-btn" onclick="filterSgLine('${l.code}',this)">${l.code}</button>`
+                ).join("");
+        }
+
+        panelWrap.innerHTML = allLines.map((l) => {
             const menGroup = safeSG.men.find(g => (g.lineCode||g.line.split(/\s+/)[0]) === l.code);
             const womenGroup = safeSG.women.find(g => (g.lineCode||g.line.split(/\s+/)[0]) === l.code);
             if (menGroup) menGroup.gender = 'MEN';
@@ -1133,6 +1114,15 @@
         }).join("");
     }
 
+    function filterSgLine(code, btn) {
+        sgActiveLine = code;
+        document.querySelectorAll('#sg-line-filter-tabs .htm-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.sg-content').forEach(p => {
+            p.style.display = (!code || p.dataset.line === code) ? '' : 'none';
+        });
+    }
+
     function selectSgLine(code, btn) {
         document.querySelectorAll(".sg-line-btn").forEach(b => b.classList.remove("active"));
         document.querySelectorAll(".sg-content").forEach(p => p.classList.remove("active"));
@@ -1152,66 +1142,6 @@
         document.getElementById("filter-fit").value = fit;
         applyFilter();
         document.getElementById("results-area").scrollIntoView({behavior: "smooth"});
-    }
-
-    function renderBottomSizeGuide() {
-        const panelWrap = document.getElementById("sg-panels");
-        if (!panelWrap) return;
-
-        const BOTTOM_LINES = ['SP','PT','SK','LG'];
-        const BOTTOM_KEY_POMS = {
-            SP: ["Waist","Low Hip","Outseam"],
-            PT: ["Waist","Low Hip","Outseam"],
-            SK: ["Waist","Outseam","Pleats width"],
-            LG: ["Waist","Low Hip","Outseam"]
-        };
-
-        panelWrap.innerHTML = BOTTOM_LINES.map(line => {
-            const lineItems = safeDataBottom.filter(i => i.line === line);
-            if (!lineItems.length) return '';
-
-            // MEN / WOMEN 분리
-            const menItems   = lineItems.filter(i => i.gender === 'MEN');
-            const womenItems = lineItems.filter(i => i.gender === 'WOMEN');
-            const keyPoms = BOTTOM_KEY_POMS[line] || ["Waist","Outseam"];
-
-            function buildTable(items, label) {
-                if (!items.length) return '';
-                // FIT 기준으로 그룹화 (SK/LG는 subtype)
-                const fitKey = (item) => (line === 'SK' || line === 'LG') ? item.subtype : item.fit;
-                const fits = [...new Set(items.map(fitKey).filter(Boolean))];
-
-                const headerCols = fits.map(f =>
-                    `<th><span class="fit-pill fp-regular" style="cursor:default">${f}</span></th>`
-                ).join('');
-
-                const bodyRows = keyPoms.map(pom => {
-                    const cells = fits.map(f => {
-                        const match = items.find(i => fitKey(i) === f && i.measures[pom]);
-                        return `<td>${match ? match.measures[pom] : '-'}</td>`;
-                    }).join('');
-                    return `<tr><td>${pom}</td>${cells}</tr>`;
-                }).join('');
-
-                return `
-                    <div class="sg-col-label">${label}</div>
-                    <div class="sg-table-wrap">
-                        <table class="sg-table">
-                            <thead><tr><th>POM</th>${headerCols}</tr></thead>
-                            <tbody>${bodyRows}</tbody>
-                        </table>
-                    </div>`;
-            }
-
-            const menHtml   = buildTable(menItems,   `👔 Men — ${line}`);
-            const womenHtml = buildTable(womenItems, `👗 Women — ${line}`);
-
-            return `<div class="sg-content active" data-line="${line}">
-                <div class="sg-table-block">${menHtml}</div>
-                <div class="sg-table-block">${womenHtml}</div>
-                <div class="sg-section-divider"></div>
-            </div>`;
-        }).join('');
     }
 
     function toggleGuide() {
@@ -1247,12 +1177,12 @@
     });
 
     const POM_CODE_MAP = {
-        "Back Body Length":      "LG11/21",
+        "Back Body Length":      "LG21",
         "Chest Circumference":   "CH10",
-        "Waist":                 "WA10/20",
+        "Waist":                 "WA20",
         "Sweep Straight":        "SW10",
-        "Neck Width":            "NK10/11",
-        "Front Neck Drop":       "NK30/31",
+        "Neck Width":            "NK10",
+        "Front Neck Drop":       "NK30",
         "Across Shoulder":       "SH10",
         "CB to SLV Length":      "CS50",
         "Bicep":                 "SL20",
@@ -1273,8 +1203,8 @@
         "Back Rise":             "RS20",
         "Back Rise (오비 제외)":  "RS20",
         "Waist band":            "WA60",
-        "Thigh":                 "LE10/11",
-        "Knee":                  "LE30/31",
+        "Thigh":                 "LE10",
+        "Knee":                  "LE31",
         "Leg Opening":           "LEB0",
         "Skirt Sweep":           "SKB0",
         "Front Skirt Length":    "SK10",
