@@ -410,9 +410,9 @@
         .sg-b-gender-btn[data-val="WOMEN"].active { background: #be185d !important; color: #fff !important; border-color: #be185d !important; }
         .sg-b-line-btn.active                     { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
         .sg-b-fabric-btn[data-val="JERSEY"]        { color: #0369a1; border-color: #bae6fd; }
-        .sg-b-fabric-btn[data-val="WOVEN"]         { color: #b45309; border-color: #fde68a; }
+        .sg-b-fabric-btn[data-val="WOVEN"]         { color: #854d0e; border-color: #fef08a; }
         .sg-b-fabric-btn[data-val="JERSEY"].active { background: #0369a1 !important; color: #fff !important; border-color: #0369a1 !important; }
-        .sg-b-fabric-btn[data-val="WOVEN"].active  { background: #b45309 !important; color: #fff !important; border-color: #b45309 !important; }
+        .sg-b-fabric-btn[data-val="WOVEN"].active  { background: #854d0e !important; color: #fff !important; border-color: #854d0e !important; }
         .sg-b-fit-btn { font-size: 9px; }
         .sg-b-fit-btn[data-val="SLIM"].active      { background: #6d28d9 !important; color: #fff !important; border-color: #6d28d9 !important; }
         .sg-b-fit-btn[data-val="REGULAR"].active   { background: #0f766e !important; color: #fff !important; border-color: #0f766e !important; }
@@ -428,7 +428,7 @@
 
         /* FABRIC 태그 */
         .tag-fabric-jersey { background: #e0f2fe; color: #0369a1; }
-        .tag-fabric-woven  { background: #fef3c7; color: #b45309; }
+        .tag-fabric-woven  { background: #fef9c3; color: #854d0e; }
 
         .sg-fit-btn { font-size: 9px; }
         .sg-sidebar-divider { width: 70%; height: 1px; background: var(--border); margin: 4px 0; }
@@ -565,7 +565,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 16:03</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 16:44</div>
 </header>
 
 <!-- FILTERS (hidden) -->
@@ -799,13 +799,34 @@
     }
     function fitTag(fit) {
         const map = {
-            "SLIM":      ["#ede9fe","#6d28d9"],
-            "REGULAR":   ["#ccfbf1","#0f766e"],
-            "SEMI-OVER": ["#fef3c7","#92400e"],
-            "OVER":      ["#fee2e2","#991b1b"]
+            "SLIM":          ["#ede9fe","#6d28d9"],
+            "REGULAR":       ["#ccfbf1","#0f766e"],
+            "SEMI-OVER":     ["#fef3c7","#92400e"],
+            "OVER":          ["#fee2e2","#991b1b"],
+            "RELAX":         ["#fef3c7","#92400e"],
+            "A LINE":        ["#fce7f3","#be185d"],
+            "FLARE":         ["#ede9fe","#6d28d9"],
+            "LONG":          ["#dbeafe","#1d4ed8"],
+            "CLASSIC PLEATS":["#ccfbf1","#0f766e"],
+            "MICRO PLEATS":  ["#fef3c7","#92400e"],
+            "WIDE PLEATS":   ["#fee2e2","#991b1b"],
+            "5부":           ["#ede9fe","#6d28d9"],
+            "9부":           ["#ccfbf1","#0f766e"],
         };
-        if (!map[fit]) return "";
+        if (!fit || !map[fit]) return "";
         return `<span class="tag" style="background:${map[fit][0]};color:${map[fit][1]}">${fit}</span>`;
+    }
+
+    function fabricTag(fabric) {
+        if (!fabric) return "";
+        if (fabric === 'JERSEY') return `<span class="tag tag-fabric-jersey">JERSEY</span>`;
+        if (fabric === 'WOVEN')  return `<span class="tag tag-fabric-woven">WOVEN</span>`;
+        return "";
+    }
+
+    function lineStyleTag(lineStyle) {
+        if (!lineStyle) return "";
+        return `<span class="tag" style="background:#f1f5f9;color:#475569;font-size:9px">${lineStyle}</span>`;
     }
 
     function renderCards(items) {
@@ -856,8 +877,9 @@
                     <div class="tags">
                         ${genderTag(item.gender, item.ref)}
                         <span class="tag tag-line">${item.line}</span>
-                        ${fitTag(item.fit)}
-                        ${item.fabric ? `<span class="tag tag-fabric-${item.fabric.toLowerCase()}">${item.fabric}</span>` : ''}
+                        ${isBottom ? fitTag(item.subtype || item.fit) : fitTag(item.fit)}
+                        ${isBottom ? fabricTag(item.fabric) : ''}
+                        ${isBottom && item.line_style ? lineStyleTag(item.line_style) : ''}
                     </div>
                     <div class="measures">${measuresHtml}</div>
                     ${item.remark ? `<div class="remark">${item.remark}</div>` : ""}
@@ -1053,7 +1075,10 @@
         const lc = group.lineCode || group.line.split(' ')[0];
         const gc = group.gender || '';
         const fitCols = group.fits.map(f =>
-            `<th><span class="fit-pill ${FP_CLASS[f.toUpperCase()]||'fp-regular'}">${f}</span></th>`
+            `<th><span class="fit-pill ${FP_CLASS[f.toUpperCase()]||'fp-regular'}" 
+                onclick="filterFromSpecGuide('${lc}','${gc}','${f.toUpperCase()}')" 
+                style="cursor:pointer;transition:opacity 0.15s;" 
+                title="${lc} ${f} 카드 보기">${f}</span></th>`
         ).join("");
         const allowedPoms = ["Chest Circumference", "Back Body Length"];
         const poms = Object.keys(group.measures).filter(p => allowedPoms.includes(p));
@@ -1100,7 +1125,7 @@
             const menHtml = menGroup ? buildSgTable(menGroup) : '<div style="color:#bbb;font-size:12px;padding:8px">데이터 없음</div>';
             const womenHtml = womenGroup ? buildSgTable(womenGroup) : '<div style="color:#bbb;font-size:12px;padding:8px">데이터 없음</div>';
             return `<div class="sg-content active" data-line="${l.code}">
-                <div class="sg-line-section-title">${l.code}</div>
+                <div class="sg-line-section-title" onclick="filterFromSpecGuide('${l.code}','','')" style="cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px;" title="${l.code} 전체 카드 보기">${l.code}</div>
                 <div class="sg-table-block">
                     <div class="sg-col-label">👔 Men — ${l.label}</div>
                     ${menHtml}
@@ -1136,12 +1161,33 @@
         applyFilter();
     }
 
-    function filterByFit(fit, lineCode, gender) {
-        if (lineCode) document.getElementById("filter-line").value = lineCode;
-        if (gender) document.getElementById("filter-gender").value = gender;
-        document.getElementById("filter-fit").value = fit;
+    function filterFromSpecGuide(lineCode, gender, fit) {
+        // SPEC GUIDE 닫고 카드 필터 적용
+        document.getElementById("size-guide-inner").style.display = "none";
+        document.getElementById("sg-spec-btn").classList.remove("active");
+
+        // 필터 값 설정
+        document.getElementById("filter-line").value   = lineCode || "";
+        document.getElementById("filter-gender").value = gender   || "";
+        document.getElementById("filter-fit").value    = fit      || "";
+
+        // 사이드바 버튼 active 상태 반영
+        document.querySelectorAll('.sg-line-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.val === lineCode);
+        });
+        document.querySelectorAll('.sg-gender-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.val === gender);
+        });
+        document.querySelectorAll('.sg-fit-btn').forEach(b => {
+            b.classList.toggle('active', b.dataset.val === fit);
+        });
+
         applyFilter();
-        document.getElementById("results-area").scrollIntoView({behavior: "smooth"});
+        document.getElementById("results-area").scrollIntoView({behavior:"smooth"});
+    }
+
+    function filterByFit(fit, lineCode, gender) {
+        filterFromSpecGuide(lineCode, gender, fit);
     }
 
     function toggleGuide() {
