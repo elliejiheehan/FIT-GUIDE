@@ -385,16 +385,26 @@
             letter-spacing: 0.08em;
             display: flex; align-items: center; justify-content: center;
         }
-        .sg-filter-btn.active { color: #fff !important; border-color: transparent !important; }
-        .sg-gender-btn[data-val="MEN"].active    { background: #1d4ed8 !important; color: #fff !important; border-color: #1d4ed8 !important; }
-        .sg-gender-btn[data-val="WOMEN"].active  { background: #be185d !important; color: #fff !important; border-color: #be185d !important; }
-        .sg-fit-btn[data-val="SLIM"].active      { background: #6d28d9 !important; color: #fff !important; border-color: #6d28d9 !important; }
-        .sg-fit-btn[data-val="REGULAR"].active   { background: #0f766e !important; color: #fff !important; border-color: #0f766e !important; }
-        .sg-fit-btn[data-val="SEMI-OVER"].active { background: #92400e !important; color: #fff !important; border-color: #92400e !important; }
-        .sg-fit-btn[data-val="OVER"].active      { background: #991b1b !important; color: #fff !important; border-color: #991b1b !important; }
-        .sg-line-btn.active                      { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
+        /* ── 사이드바 버튼 아웃라인 스타일 ── */
+        .sg-filter-btn.active,
+        .sg-line-btn.active,
+        .sg-b-btn.active,
+        .sg-spec-btn.active,
+        .sg-tab-btn.active,
+        .sg-reset-btn.active {
+            background: var(--off-white) !important;
+            color: var(--text-primary) !important;
+            border: 1.5px solid var(--text-primary) !important;
+        }
 
-        /* BOTTOM 버튼 */
+        /* 비활성 기본 색상 — 전부 회색 */
+        .sg-gender-btn, .sg-fit-btn, .sg-b-gender-btn,
+        .sg-b-line-btn, .sg-b-fabric-btn, .sg-b-fit-btn {
+            color: var(--text-muted) !important;
+            border-color: var(--border) !important;
+        }
+
+        /* BOTTOM 버튼 기본 */
         .sg-b-btn {
             width: 70%; min-width: 52px; height: 32px; flex-shrink: 0;
             border-radius: 6px; border: 1px solid var(--border);
@@ -404,27 +414,7 @@
             letter-spacing: 0.08em;
             display: flex; align-items: center; justify-content: center;
         }
-        .sg-b-gender-btn[data-val="MEN"]          { color: #1d4ed8; border-color: #bfdbfe; }
-        .sg-b-gender-btn[data-val="WOMEN"]        { color: #be185d; border-color: #fbcfe8; }
-        .sg-b-gender-btn[data-val="MEN"].active   { background: #1d4ed8 !important; color: #fff !important; border-color: #1d4ed8 !important; }
-        .sg-b-gender-btn[data-val="WOMEN"].active { background: #be185d !important; color: #fff !important; border-color: #be185d !important; }
-        .sg-b-line-btn.active                     { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
-        .sg-b-fabric-btn[data-val="JERSEY"]        { color: #0369a1; border-color: #bae6fd; }
-        .sg-b-fabric-btn[data-val="WOVEN"]         { color: #854d0e; border-color: #fef08a; }
-        .sg-b-fabric-btn[data-val="JERSEY"].active { background: #0369a1 !important; color: #fff !important; border-color: #0369a1 !important; }
-        .sg-b-fabric-btn[data-val="WOVEN"].active  { background: #854d0e !important; color: #fff !important; border-color: #854d0e !important; }
         .sg-b-fit-btn { font-size: 9px; }
-        .sg-b-fit-btn[data-val="SLIM"].active      { background: #6d28d9 !important; color: #fff !important; border-color: #6d28d9 !important; }
-        .sg-b-fit-btn[data-val="REGULAR"].active   { background: #0f766e !important; color: #fff !important; border-color: #0f766e !important; }
-        .sg-b-fit-btn[data-val="RELAX"].active     { background: #92400e !important; color: #fff !important; border-color: #92400e !important; }
-        .sg-b-fit-btn[data-val="A LINE"].active         { background: #be185d !important; color: #fff !important; border-color: #be185d !important; }
-        .sg-b-fit-btn[data-val="FLARE"].active          { background: #6d28d9 !important; color: #fff !important; border-color: #6d28d9 !important; }
-        .sg-b-fit-btn[data-val="LONG"].active           { background: #1d4ed8 !important; color: #fff !important; border-color: #1d4ed8 !important; }
-        .sg-b-fit-btn[data-val="CLASSIC PLEATS"].active { background: #0f766e !important; color: #fff !important; border-color: #0f766e !important; }
-        .sg-b-fit-btn[data-val="MICRO PLEATS"].active   { background: #92400e !important; color: #fff !important; border-color: #92400e !important; }
-        .sg-b-fit-btn[data-val="WIDE PLEATS"].active    { background: #991b1b !important; color: #fff !important; border-color: #991b1b !important; }
-        .sg-b-fit-btn[data-val="5부"].active { background: #6d28d9 !important; color: #fff !important; border-color: #6d28d9 !important; }
-        .sg-b-fit-btn[data-val="9부"].active { background: #0f766e !important; color: #fff !important; border-color: #0f766e !important; }
 
         /* FABRIC 태그 */
         .tag-fabric-jersey { background: #e0f2fe; color: #0369a1; }
@@ -565,7 +555,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 16:44</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 16:55</div>
 </header>
 
 <!-- FILTERS (hidden) -->
@@ -598,8 +588,8 @@
         <div id="top-filters" style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
             <div class="sg-sidebar-title">GENDER</div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
-                <button class="sg-filter-btn sg-gender-btn" data-val="MEN" onclick="toggleSideFilter('gender','MEN',this)" style="color:#1d4ed8;border-color:#bfdbfe;">MEN</button>
-                <button class="sg-filter-btn sg-gender-btn" data-val="WOMEN" onclick="toggleSideFilter('gender','WOMEN',this)" style="color:#be185d;border-color:#fbcfe8;">WOMEN</button>
+                <button class="sg-filter-btn sg-gender-btn" data-val="MEN" onclick="toggleSideFilter('gender','MEN',this)">MEN</button>
+                <button class="sg-filter-btn sg-gender-btn" data-val="WOMEN" onclick="toggleSideFilter('gender','WOMEN',this)">WOMEN</button>
             </div>
             <div class="sg-sidebar-divider"></div>
             <div class="sg-sidebar-title">LINE</div>
@@ -607,10 +597,10 @@
             <div class="sg-sidebar-divider"></div>
             <div class="sg-sidebar-title">FIT</div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
-                <button class="sg-filter-btn sg-fit-btn" data-val="SLIM" onclick="toggleSideFilter('fit','SLIM',this)" style="color:#6d28d9;border-color:#d8b4fe;">SLIM</button>
-                <button class="sg-filter-btn sg-fit-btn" data-val="REGULAR" onclick="toggleSideFilter('fit','REGULAR',this)" style="color:#0f766e;border-color:#99f6e4;">REGULAR</button>
-                <button class="sg-filter-btn sg-fit-btn" data-val="SEMI-OVER" onclick="toggleSideFilter('fit','SEMI-OVER',this)" style="color:#92400e;border-color:#fde68a;">SEMI-OVER</button>
-                <button class="sg-filter-btn sg-fit-btn" data-val="OVER" onclick="toggleSideFilter('fit','OVER',this)" style="color:#991b1b;border-color:#fecaca;">OVER</button>
+                <button class="sg-filter-btn sg-fit-btn" data-val="SLIM" onclick="toggleSideFilter('fit','SLIM',this)">SLIM</button>
+                <button class="sg-filter-btn sg-fit-btn" data-val="REGULAR" onclick="toggleSideFilter('fit','REGULAR',this)">REGULAR</button>
+                <button class="sg-filter-btn sg-fit-btn" data-val="SEMI-OVER" onclick="toggleSideFilter('fit','SEMI-OVER',this)">SEMI-OVER</button>
+                <button class="sg-filter-btn sg-fit-btn" data-val="OVER" onclick="toggleSideFilter('fit','OVER',this)">OVER</button>
             </div>
         </div>
 
