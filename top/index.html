@@ -474,7 +474,16 @@
         .sg-table tbody tr:hover { background: var(--off-white); }
         .sg-table tbody td { padding: 6px 12px; text-align: center; color: var(--text-primary); font-size: 11px; font-family: var(--sans); }
         .sg-table tbody td:first-child { text-align: left; font-weight: 500; color: var(--text-secondary); white-space: nowrap; font-size: 11px; font-family: var(--sans); }
+        .sg-line-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            color: var(--text-primary);
+            font-family: var(--sans);
+            margin-bottom: 14px;
+        }
         .sg-divider { height: 1px; background: var(--border); margin: 10px 0 14px; }
+        .sg-section-divider { height: 2px; background: var(--off-white); margin: 20px 0 24px; }
         .fit-pill { display: inline-block; font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 100px; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.15s; font-family: var(--sans); }
         .fit-pill:hover { opacity: 0.75; }
         .fp-regular   { background: #ccfbf1; color: #0f766e; }
@@ -509,7 +518,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 10:58</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 11:08</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -771,7 +780,8 @@
             if (womenGroup) womenGroup.gender = 'WOMEN';
             const menHtml = menGroup ? buildSgTable(menGroup) : '<div style="color:#bbb;font-size:12px;padding:8px">데이터 없음</div>';
             const womenHtml = womenGroup ? buildSgTable(womenGroup) : '<div style="color:#bbb;font-size:12px;padding:8px">데이터 없음</div>';
-            return `<div class="sg-content${i===0?' active':''}" data-line="${l.code}">
+            return `<div class="sg-content active" data-line="${l.code}">
+                <div class="sg-line-section-title">${l.code}</div>
                 <div class="sg-table-block">
                     <div class="sg-col-label">👔 Men — ${l.label}</div>
                     ${menHtml}
@@ -781,6 +791,7 @@
                     <div class="sg-col-label">👗 Women — ${l.label}</div>
                     ${womenHtml}
                 </div>
+                <div class="sg-section-divider"></div>
             </div>`;
         }).join("");
     }
