@@ -533,16 +533,16 @@
 <!-- LOADING SCREEN -->
 <div id="loading-screen">
     <div class="loading-brand">Sergio Tacchini</div>
-    <div class="loading-title">👕 Top Fit Guide</div>
+    <div class="loading-title">FIT GUIDE</div>
     <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
 </div>
 
 <header>
     <div>
         <div class="header-brand">Sergio Tacchini</div>
-        <div class="header-title">Top Fit Guide</div>
+        <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 13:55</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 14:18</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -707,7 +707,7 @@
         const fits = BOTTOM_FIT_MAP[line] || [];
         if (!fits.length) { wrap.innerHTML = ''; return; }
         wrap.innerHTML = fits.map(f =>
-            `<button class="sg-filter-btn sg-b-fit-btn" data-val="${f.val}"
+            `<button class="sg-filter-btn sg-b-fit-btn" data-val="${f.val}" data-active-bg="${f.color}"
                 onclick="toggleBottomFilter('fit','${f.val}',this)"
                 style="color:${f.color};border-color:${f.border};font-size:9px;">${f.val}</button>`
         ).join('');
@@ -744,11 +744,23 @@
         if (bottomFilter[type] === val) {
             bottomFilter[type] = '';
             btn.classList.remove('active');
+            btn.style.background = 'transparent';
             if (type === 'line') { bottomFilter.fit = ''; renderBottomFitBtns(''); }
         } else {
             bottomFilter[type] = val;
-            document.querySelectorAll(btnClass).forEach(b => b.classList.remove('active'));
+            // 같은 그룹 버튼 비활성화
+            document.querySelectorAll(btnClass).forEach(b => {
+                b.classList.remove('active');
+                b.style.background = 'transparent';
+            });
             btn.classList.add('active');
+            // fit 버튼은 data-active-bg로 색상 적용, 나머지는 CSS로
+            const activeBg = btn.dataset.activeBg;
+            if (activeBg) {
+                btn.style.background = activeBg;
+                btn.style.color = '#fff';
+                btn.style.borderColor = 'transparent';
+            }
             if (type === 'line') { bottomFilter.fit = ''; renderBottomFitBtns(val); }
         }
         applyFilter();
@@ -881,15 +893,23 @@
         btn.classList.toggle("active", !isOpen);
 
         if (!isOpen) {
-            // SPEC GUIDE 열리면 필터 초기화 + 카드 숨김
+            // 필터 초기화 + 카드 숨김
             document.getElementById("filter-line").value = "";
             document.getElementById("filter-gender").value = "";
             document.getElementById("filter-fit").value = "";
             document.getElementById("search-input").value = "";
-            document.querySelectorAll('.sg-line-btn, .sg-gender-btn, .sg-fit-btn')
-                .forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.sg-line-btn, .sg-gender-btn, .sg-fit-btn,\
+                .sg-b-gender-btn, .sg-b-line-btn, .sg-b-fabric-btn, .sg-b-fit-btn')
+                .forEach(b => { b.classList.remove('active'); b.style.background = 'transparent'; });
             document.getElementById("grid").innerHTML = '';
             document.getElementById("count").textContent = '0';
+
+            // 탭에 따라 SPEC GUIDE 렌더링
+            if (currentTab === 'top') {
+                renderSizeGuide();
+            } else {
+                renderBottomSizeGuide();
+            }
         }
     }
 
@@ -938,7 +958,9 @@
 
     // ── SIZE GUIDE ──
     const SG_DATA = {"men": [{"line": "RS  반팔", "lineCode": "RS", "fits": ["REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["108cm~", "114cm~", "122cm~"], "Back Body Length": ["68cm~", "69cm~", "69cm~"], "MT  맨투맨·후드": ["-", "-", "-"]}}, {"line": "MT  맨투맨·후드", "lineCode": "MT", "fits": ["REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["110cm~", "116cm~", "124cm~"], "Back Body Length": ["68cm~", "69cm~", "69cm~"], "PQ  폴로": ["-", "-", "-"]}}, {"line": "PQ  폴로", "lineCode": "PQ", "fits": ["REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["104cm~", "110cm~", "116cm~"], "Back Body Length": ["68cm~", "69cm~", "69cm~"], "TR  트레이닝 재킷": ["-", "-", "-"]}}, {"line": "TR  트레이닝 재킷", "lineCode": "TR", "fits": ["REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["110cm~", "116cm~", "122cm~"], "Back Body Length": ["68cm~", "69cm~", "69cm~"], "WJ  윈드재킷": ["-", "-", "-"]}}, {"line": "WJ  윈드재킷", "lineCode": "WJ", "fits": ["REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["114cm~", "120cm~", "128cm~"], "Back Body Length": ["70cm~", "70cm~", "70cm~"], "RL  긴팔": ["-", "-", "-"]}}, {"line": "RL  긴팔", "lineCode": "RL", "fits": ["REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["110cm~", "118cm~", "126cm~"], "Back Body Length": ["68cm~", "69cm~", "69cm~"], "SL 민소매": ["-", "-", "-"]}}, {"line": "SL 민소매", "lineCode": "SL", "fits": ["SLIM", "REGULAR"], "measures": {"Chest Circumference": ["-", "114cm~"], "Back Body Length": ["-", "68cm~"]}}], "women": [{"line": "RS  반팔", "lineCode": "RS", "fits": ["SLIM", "REGULAR", "SEMI-OVER"], "measures": {"Chest Circumference": ["70cm~", "90cm~", "96cm~"], "Back Body Length": ["57cm~", "58cm~", "58cm~"], "MT 맨투맨·후드": ["-", "-", "-"]}}, {"line": "MT 맨투맨·후드", "lineCode": "MT", "fits": ["REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["94cm~", "100cm~", "108cm~"], "Back Body Length": ["58cm~", "59cm~", "59cm~"], "PQ  폴로": ["-", "-", "-"]}}, {"line": "PQ  폴로", "lineCode": "PQ", "fits": ["SLIM", "REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["76cm~", "88cm~", "94cm~", "100cm~"], "Back Body Length": ["57cm~", "58cm~", "58cm~", "58cm~"], "TR  트레이닝 재킷": ["-", "-", "-", "-"]}}, {"line": "TR  트레이닝 재킷", "lineCode": "TR", "fits": ["SLIM", "REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["80cm~", "92cm~", "98cm~", "106cm~"], "Back Body Length": ["58cm~", "58cm~", "59cm~", "59cm~"], "WJ  윈드재킷": ["-", "-", "-", "-"]}}, {"line": "WJ  윈드재킷", "lineCode": "WJ", "fits": ["REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["96cm~", "104cm~", "112cm~"], "Back Body Length": ["58cm~", "60cm~", "60cm~"], "RL  긴팔": ["-", "-", "-"]}}, {"line": "RL  긴팔", "lineCode": "RL", "fits": ["SLIM", "REGULAR", "SEMI-OVER", "OVER"], "measures": {"Chest Circumference": ["75cm~", "90cm~", "96cm~", "104cm~"], "Back Body Length": ["57cm~", "58cm~", "58cm~", "58cm~"], "SL 민소매": ["-", "-", "-", "-"]}}, {"line": "SL 민소매", "lineCode": "SL", "fits": ["SLIM", "REGULAR"], "measures": {"Chest Circumference": ["70cm~", "-"], "Back Body Length": ["57cm~", "-"]}}]};
+    const SG_DATA_BOTTOM = null;
     const safeSG = (SG_DATA && Array.isArray(SG_DATA.men)) ? SG_DATA : {men:[], women:[]};
+    const safeSGBottom = (SG_DATA_BOTTOM && Array.isArray(SG_DATA_BOTTOM.men)) ? SG_DATA_BOTTOM : {men:[], women:[]};
     const FP_CLASS = {"REGULAR":"fp-regular","SEMI-OVER":"fp-semi-over","OVER":"fp-over","SLIM":"fp-slim","SPORTY":"fp-sporty"};
 
     function buildSgTable(group) {
@@ -1016,7 +1038,65 @@
         document.getElementById("results-area").scrollIntoView({behavior: "smooth"});
     }
 
-    function toggleGuide() {
+    function renderBottomSizeGuide() {
+        const panelWrap = document.getElementById("sg-panels");
+        if (!panelWrap) return;
+
+        const BOTTOM_LINES = ['SP','PT','SK','LG'];
+        const BOTTOM_KEY_POMS = {
+            SP: ["Waist","Low Hip","Outseam"],
+            PT: ["Waist","Low Hip","Outseam"],
+            SK: ["Waist","Outseam","Pleats width"],
+            LG: ["Waist","Low Hip","Outseam"]
+        };
+
+        panelWrap.innerHTML = BOTTOM_LINES.map(line => {
+            const lineItems = safeDataBottom.filter(i => i.line === line);
+            if (!lineItems.length) return '';
+
+            // MEN / WOMEN 분리
+            const menItems   = lineItems.filter(i => i.gender === 'MEN');
+            const womenItems = lineItems.filter(i => i.gender === 'WOMEN');
+            const keyPoms = BOTTOM_KEY_POMS[line] || ["Waist","Outseam"];
+
+            function buildTable(items, label) {
+                if (!items.length) return '';
+                // FIT 기준으로 그룹화 (SK/LG는 subtype)
+                const fitKey = (item) => (line === 'SK' || line === 'LG') ? item.subtype : item.fit;
+                const fits = [...new Set(items.map(fitKey).filter(Boolean))];
+
+                const headerCols = fits.map(f =>
+                    `<th><span class="fit-pill fp-regular" style="cursor:default">${f}</span></th>`
+                ).join('');
+
+                const bodyRows = keyPoms.map(pom => {
+                    const cells = fits.map(f => {
+                        const match = items.find(i => fitKey(i) === f && i.measures[pom]);
+                        return `<td>${match ? match.measures[pom] : '-'}</td>`;
+                    }).join('');
+                    return `<tr><td>${pom}</td>${cells}</tr>`;
+                }).join('');
+
+                return `
+                    <div class="sg-col-label">${label}</div>
+                    <div class="sg-table-wrap">
+                        <table class="sg-table">
+                            <thead><tr><th>POM</th>${headerCols}</tr></thead>
+                            <tbody>${bodyRows}</tbody>
+                        </table>
+                    </div>`;
+            }
+
+            const menHtml   = buildTable(menItems,   `👔 Men — ${line}`);
+            const womenHtml = buildTable(womenItems, `👗 Women — ${line}`);
+
+            return `<div class="sg-content active" data-line="${line}">
+                <div class="sg-table-block">${menHtml}</div>
+                <div class="sg-table-block">${womenHtml}</div>
+                <div class="sg-section-divider"></div>
+            </div>`;
+        }).join('');
+    }
         const body = document.getElementById("sg-body");
         const btn = document.getElementById("sg-toggle-btn");
         const hidden = body.style.display === "none";
