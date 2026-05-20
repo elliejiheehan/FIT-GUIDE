@@ -518,7 +518,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 11:20</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 11:24</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -867,9 +867,10 @@
         document.getElementById("modal-table").innerHTML =
             Object.entries(item.measures)
                   .map(([k,v]) => {
-                      const isBold = boldPoms.includes(k);
-                      const style = isBold ? ' style="font-weight:700;color:var(--text-primary)"' : '';
-                      return `<tr><td${style}>${k}</td><td${style}>${v}</td></tr>`;
+                      const isHighlight = boldPoms.includes(k);
+                      const style = isHighlight ? ' style="background:#F0F7F4;"' : '';
+                      const tdStyle = isHighlight ? ' style="color:#2D4A3E;font-weight:500"' : '';
+                      return `<tr${style}><td${tdStyle}>${k}</td><td${tdStyle}>${v}</td></tr>`;
                   })
                   .join("");
         document.getElementById("modal-overlay").classList.add("open");
