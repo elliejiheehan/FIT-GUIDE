@@ -404,6 +404,18 @@
         .sg-fit-btn[data-val="SEMI-OVER"].active { background: #92400e; }
         .sg-fit-btn[data-val="OVER"].active      { background: #991b1b; }
 
+        /* BOTTOM 버튼 active */
+        .sg-b-gender-btn[data-val="MEN"].active    { background: #1d4ed8; }
+        .sg-b-gender-btn[data-val="WOMEN"].active  { background: #be185d; }
+        .sg-b-line-btn.active                      { background: var(--accent); }
+        .sg-b-fabric-btn[data-val="JERSEY"].active { background: #0369a1; }
+        .sg-b-fabric-btn[data-val="WOVEN"].active  { background: #b45309; }
+        .sg-b-fit-btn.active                       { color: #fff !important; border-color: transparent !important; }
+
+        /* FABRIC 태그 */
+        .tag-fabric-jersey { background: #e0f2fe; color: #0369a1; }
+        .tag-fabric-woven  { background: #fef3c7; color: #b45309; }
+
         .sg-fit-btn { font-size: 9px; }
         .sg-sidebar-divider { width: 70%; height: 1px; background: var(--border); margin: 4px 0; }
 
@@ -530,7 +542,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 13:44</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 13:55</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -597,8 +609,8 @@
             <div class="sg-sidebar-divider"></div>
             <div class="sg-sidebar-title">FABRIC</div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
-                <button class="sg-filter-btn sg-b-fabric-btn" data-val="JERSEY" onclick="toggleBottomFilter('fabric','JERSEY',this)">JERSEY</button>
-                <button class="sg-filter-btn sg-b-fabric-btn" data-val="WOVEN" onclick="toggleBottomFilter('fabric','WOVEN',this)">WOVEN</button>
+                <button class="sg-filter-btn sg-b-fabric-btn" data-val="JERSEY" onclick="toggleBottomFilter('fabric','JERSEY',this)" style="color:#0369a1;border-color:#bae6fd;">JERSEY</button>
+                <button class="sg-filter-btn sg-b-fabric-btn" data-val="WOVEN" onclick="toggleBottomFilter('fabric','WOVEN',this)" style="color:#b45309;border-color:#fde68a;">WOVEN</button>
             </div>
             <div class="sg-sidebar-divider"></div>
             <div class="sg-sidebar-title">FIT</div>
@@ -773,6 +785,30 @@
         grid.innerHTML = items.map((item, i) => {
             const m = item.measures;
             const delay = Math.min(i * 40, 800);
+
+            // TOP vs BOTTOM 스펙 표시 분기
+            let measuresHtml = '';
+            const isBottom = !!item.fabric || item.line === 'SP' || item.line === 'PT' || item.line === 'SK' || item.line === 'LG';
+            if (isBottom) {
+                if (item.line === 'SK') {
+                    measuresHtml = `
+                        <div class="measure-item">${m["Waist"]       ? "Waist: <span>"+m["Waist"]+"</span>" : ""}</div>
+                        <div class="measure-item">${m["Outseam"]     ? "Outseam: <span>"+m["Outseam"]+"</span>" : ""}</div>
+                        <div class="measure-item">${m["Pleats width"]? "Pleats W: <span>"+m["Pleats width"]+"</span>" : ""}</div>`;
+                } else {
+                    measuresHtml = `
+                        <div class="measure-item">${m["Waist"]    ? "Waist: <span>"+m["Waist"]+"</span>" : ""}</div>
+                        <div class="measure-item">${m["Low Hip"]  ? "Low Hip: <span>"+m["Low Hip"]+"</span>" : ""}</div>
+                        <div class="measure-item">${m["Outseam"]  ? "Outseam: <span>"+m["Outseam"]+"</span>" : ""}</div>`;
+                }
+            } else {
+                measuresHtml = `
+                    <div class="measure-item">${m["Chest Circumference"] ? "Chest: <span>"+m["Chest Circumference"]+"</span>" : ""}</div>
+                    <div class="measure-item">${m["Back Body Length"]    ? "CB Length: <span>"+m["Back Body Length"]+"</span>" : ""}</div>
+                    <div class="measure-item">${m["Across Shoulder"]     ? "Shoulder: <span>"+m["Across Shoulder"]+"</span>" : ""}</div>
+                    <div class="measure-item">${m["CB to SLV Length"]   ? "CB Sleeve: <span>"+m["CB to SLV Length"]+"</span>" : ""}</div>`;
+            }
+
             return `<div class="card" style="animation-delay:${delay}ms" onclick="openModal('${item.uid || item.ref}')">
                 <div class="card-img">
                     <img src="images/${item.ref}.png" alt="${item.ref}"
@@ -784,13 +820,10 @@
                         ${genderTag(item.gender, item.ref)}
                         <span class="tag tag-line">${item.line}</span>
                         ${fitTag(item.fit)}
+                        ${item.fabric ? `<span class="tag tag-fabric-${item.fabric.toLowerCase()}">${item.fabric}</span>` : ''}
+                        ${item.subtype ? `<span class="tag" style="background:#f1f5f9;color:#475569;font-size:9px">${item.subtype}</span>` : ''}
                     </div>
-                    <div class="measures">
-                        <div class="measure-item">${m["Chest Circumference"] ? "Chest: <span>"+m["Chest Circumference"]+"</span>" : ""}</div>
-                        <div class="measure-item">${m["Back Body Length"] ? "CB Length: <span>"+m["Back Body Length"]+"</span>" : ""}</div>
-                        <div class="measure-item">${m["Across Shoulder"] ? "Shoulder: <span>"+m["Across Shoulder"]+"</span>" : ""}</div>
-                        <div class="measure-item">${m["CB to SLV Length"] ? "CB Sleeve: <span>"+m["CB to SLV Length"]+"</span>" : ""}</div>
-                    </div>
+                    <div class="measures">${measuresHtml}</div>
                     ${item.remark ? `<div class="remark">${item.remark}</div>` : ""}
                 </div>
             </div>`;
