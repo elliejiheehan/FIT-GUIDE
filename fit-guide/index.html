@@ -399,7 +399,8 @@
 
         /* 비활성 기본 색상 — 전부 회색 */
         .sg-gender-btn, .sg-fit-btn, .sg-b-gender-btn,
-        .sg-b-line-btn, .sg-b-fabric-btn, .sg-b-fit-btn {
+        .sg-b-line-btn, .sg-b-fabric-btn, .sg-b-fit-btn,
+        .sg-top-fabric-btn {
             color: var(--text-muted) !important;
             border-color: var(--border) !important;
         }
@@ -551,14 +552,11 @@
 </div>
 
 <header>
-    <div style="display:flex;align-items:center;gap:16px;">
-        <button id="back-btn" onclick="goBack()" style="display:none;background:rgba(255,255,255,0.15);border:none;color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:none;align-items:center;justify-content:center;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">←</button>
-        <div>
-            <div class="header-brand">Sergio Tacchini</div>
-            <div class="header-title">Fit Guide</div>
-        </div>
+    <div>
+        <div class="header-brand">Sergio Tacchini</div>
+        <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 17:28</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 17:30</div>
 </header>
 
 <!-- FILTERS (hidden) -->
@@ -609,14 +607,14 @@
                 <button class="sg-filter-btn sg-gender-btn" data-val="WOMEN" onclick="toggleSideFilter('gender','WOMEN',this)">WOMEN</button>
             </div>
             <div class="sg-sidebar-divider"></div>
-            <div class="sg-sidebar-title">LINE</div>
-            <div id="sg-line-btns" style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;"></div>
-            <div class="sg-sidebar-divider"></div>
             <div class="sg-sidebar-title">FABRIC</div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
                 <button class="sg-filter-btn sg-top-fabric-btn" data-val="JERSEY" onclick="toggleSideFilter('fabric','JERSEY',this)">JERSEY</button>
                 <button class="sg-filter-btn sg-top-fabric-btn" data-val="WOVEN" onclick="toggleSideFilter('fabric','WOVEN',this)">WOVEN</button>
             </div>
+            <div class="sg-sidebar-divider"></div>
+            <div class="sg-sidebar-title">CATEGORY</div>
+            <div id="sg-line-btns" style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;"></div>
             <div class="sg-sidebar-divider"></div>
             <div class="sg-sidebar-title">FIT</div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
@@ -635,7 +633,7 @@
                 <button class="sg-b-btn sg-b-gender-btn" data-val="WOMEN" onclick="toggleBottomFilter('gender','WOMEN',this)">WOMEN</button>
             </div>
             <div class="sg-sidebar-divider"></div>
-            <div class="sg-sidebar-title">LINE</div>
+            <div class="sg-sidebar-title">CATEGORY</div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
                 <button class="sg-b-btn sg-b-line-btn" data-val="SP" onclick="toggleBottomFilter('line','SP',this)">SP</button>
                 <button class="sg-b-btn sg-b-line-btn" data-val="PT" onclick="toggleBottomFilter('line','PT',this)">PT</button>
@@ -846,9 +844,11 @@
             const m = item.measures;
             const delay = Math.min(i * 40, 800);
 
-            // TOP vs BOTTOM 스펙 표시 분기
+            // TOP vs BOTTOM 구분 — 품번 prefix로 판단
+            const refUpper = String(item.ref || "").toUpperCase();
+            const isBottom = refUpper.startsWith("BM-") || refUpper.startsWith("BW-") ||
+                ['SP','PT','SK','LG'].includes(item.line);
             let measuresHtml = '';
-            const isBottom = !!item.fabric || item.line === 'SP' || item.line === 'PT' || item.line === 'SK' || item.line === 'LG';
             if (isBottom) {
                 if (item.line === 'SK') {
                     measuresHtml = `
@@ -878,9 +878,9 @@
                     <div class="card-ref">${item.uid || item.ref}</div>
                     <div class="tags">
                         ${genderTag(item.gender, item.ref)}
+                        ${item.fabric ? fabricTag(item.fabric) : ''}
                         <span class="tag tag-line">${item.line}</span>
                         ${isBottom ? fitTag(item.subtype || item.fit) : fitTag(item.fit)}
-                        ${item.fabric ? fabricTag(item.fabric) : ''}
                         ${isBottom && item.line_style ? lineStyleTag(item.line_style) : ''}
                     </div>
                     <div class="measures">${measuresHtml}</div>
