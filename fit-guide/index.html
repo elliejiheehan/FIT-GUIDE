@@ -555,7 +555,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 16:55</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 17:01</div>
 </header>
 
 <!-- FILTERS (hidden) -->
@@ -570,6 +570,19 @@
 <!-- MAIN BODY: sidebar + content -->
 <div class="main-body">
     <div class="sg-sidebar" id="size-guide-section">
+
+        <!-- SEARCH -->
+        <div class="sg-sidebar-title">SEARCH</div>
+        <div style="width:70%;position:relative;">
+            <input type="text" id="search-input-side" placeholder="품번 검색..."
+                style="width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:10px;font-family:var(--sans);color:var(--text-primary);background:#fff;outline:none;"
+                oninput="applyFilter()">
+        </div>
+
+        <!-- RESET -->
+        <button class="sg-reset-btn" onclick="resetAll()">↺ RESET</button>
+
+        <div class="sg-sidebar-divider"></div>
 
         <!-- SPEC GUIDE 버튼 -->
         <button class="sg-spec-btn" id="sg-spec-btn" onclick="toggleSpecGuide(this)">SPEC<br>GUIDE</button>
@@ -631,17 +644,6 @@
         </div>
 
         <div class="sg-sidebar-divider"></div>
-        <!-- RESET -->
-        <button class="sg-reset-btn" onclick="resetAll()">↺ RESET</button>
-
-        <div class="sg-sidebar-divider"></div>
-        <!-- 검색 -->
-        <div class="sg-sidebar-title">SEARCH</div>
-        <div style="width:70%;position:relative;">
-            <input type="text" id="search-input-side" placeholder="품번 검색..."
-                style="width:100%;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:10px;font-family:var(--sans);color:var(--text-primary);background:#fff;outline:none;"
-                oninput="applyFilter()">
-        </div>
     </div>
 
     <div class="main-content">
@@ -716,7 +718,7 @@
             { val:'RELAX',   color:'#92400e', border:'#fde68a' }
         ],
         SK: [
-            { val:'A LINE',         color:'#be185d', border:'#fbcfe8' },
+            { val:'A-LINE',        color:'#be185d', border:'#fbcfe8' },
             { val:'FLARE',          color:'#6d28d9', border:'#d8b4fe' },
             { val:'LONG',           color:'#1d4ed8', border:'#bfdbfe' },
             { val:'CLASSIC PLEATS', color:'#0f766e', border:'#99f6e4' },
@@ -794,7 +796,7 @@
             "SEMI-OVER":     ["#fef3c7","#92400e"],
             "OVER":          ["#fee2e2","#991b1b"],
             "RELAX":         ["#fef3c7","#92400e"],
-            "A LINE":        ["#fce7f3","#be185d"],
+            "A-LINE":        ["#fce7f3","#be185d"],
             "FLARE":         ["#ede9fe","#6d28d9"],
             "LONG":          ["#dbeafe","#1d4ed8"],
             "CLASSIC PLEATS":["#ccfbf1","#0f766e"],
