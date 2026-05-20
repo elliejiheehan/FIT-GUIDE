@@ -363,11 +363,11 @@
         .sg-line-btn {
             width: 70%;
             min-width: 52px;
-            height: 36px;
+            height: 32px;
             flex-shrink: 0;
             border-radius: 6px;
             border: 1px solid var(--border);
-            font-size: 15px;
+            font-size: 10px;
             font-weight: 700;
             cursor: pointer;
             background: transparent;
@@ -404,6 +404,7 @@
         .sg-fit-btn[data-val="SEMI-OVER"].active { background: #92400e; }
         .sg-fit-btn[data-val="OVER"].active      { background: #991b1b; }
 
+        .sg-fit-btn { font-size: 9px; }
         .sg-sidebar-divider { width: 70%; height: 1px; background: var(--border); margin: 4px 0; }
 
         .main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
@@ -469,7 +470,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 10:46</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 10:50</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -503,8 +504,8 @@
         <div class="sg-sidebar-title">FIT</div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;">
             <button class="sg-filter-btn sg-fit-btn" data-val="SLIM" onclick="toggleSideFilter('fit','SLIM',this)" style="color:#6d28d9;border-color:#d8b4fe;">SLIM</button>
-            <button class="sg-filter-btn sg-fit-btn" data-val="REGULAR" onclick="toggleSideFilter('fit','REGULAR',this)" style="color:#0f766e;border-color:#99f6e4;">REG</button>
-            <button class="sg-filter-btn sg-fit-btn" data-val="SEMI-OVER" onclick="toggleSideFilter('fit','SEMI-OVER',this)" style="color:#92400e;border-color:#fde68a;">S-OVR</button>
+            <button class="sg-filter-btn sg-fit-btn" data-val="REGULAR" onclick="toggleSideFilter('fit','REGULAR',this)" style="color:#0f766e;border-color:#99f6e4;">REGULAR</button>
+            <button class="sg-filter-btn sg-fit-btn" data-val="SEMI-OVER" onclick="toggleSideFilter('fit','SEMI-OVER',this)" style="color:#92400e;border-color:#fde68a;">SEMI-OVER</button>
             <button class="sg-filter-btn sg-fit-btn" data-val="OVER" onclick="toggleSideFilter('fit','OVER',this)" style="color:#991b1b;border-color:#fecaca;">OVER</button>
         </div>
     </div>
