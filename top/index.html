@@ -6,8 +6,7 @@
     <title>Sergio Tacchini — Top Fit Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -28,11 +27,11 @@
             --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
             --radius: 8px;
             --mono: 'DM Mono', monospace;
-            --sans: 'Pretendard', 'Inter', sans-serif;
+            --sans: 'IBM Plex Sans KR', sans-serif;
         }
 
         body {
-            font-family: 'Pretendard', 'Inter', var(--sans) !important;
+            font-family: 'IBM Plex Sans KR', sans-serif !important;
             background: var(--bg);
             color: var(--text-primary);
         }
@@ -349,7 +348,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 8px;
             background: #fff;
         }
         .sg-sidebar-title {
@@ -380,6 +379,32 @@
         }
         .sg-line-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
         .sg-line-btn:hover:not(.active) { border-color: var(--accent-m); color: var(--accent); background: var(--accent-l); }
+
+        .sg-filter-btn {
+            width: 70%;
+            min-width: 52px;
+            height: 32px;
+            flex-shrink: 0;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            background: transparent;
+            font-family: var(--mono);
+            transition: all 0.15s;
+            letter-spacing: 0.08em;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .sg-filter-btn.active { color: #fff !important; border-color: transparent !important; }
+        .sg-gender-btn[data-val="MEN"].active    { background: #1d4ed8; }
+        .sg-gender-btn[data-val="WOMEN"].active  { background: #be185d; }
+        .sg-fit-btn[data-val="SLIM"].active      { background: #6d28d9; }
+        .sg-fit-btn[data-val="REGULAR"].active   { background: #0f766e; }
+        .sg-fit-btn[data-val="SEMI-OVER"].active { background: #92400e; }
+        .sg-fit-btn[data-val="OVER"].active      { background: #991b1b; }
+
+        .sg-sidebar-divider { width: 70%; height: 1px; background: var(--border); margin: 4px 0; }
 
         .main-content { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 
@@ -444,7 +469,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 10:16</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 10:35</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -459,8 +484,29 @@
 <!-- MAIN BODY: sidebar + content -->
 <div class="main-body">
     <div class="sg-sidebar" id="size-guide-section">
+        <!-- GENDER -->
+        <div class="sg-sidebar-title">GENDER</div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;">
+            <button class="sg-filter-btn sg-gender-btn" data-val="MEN" onclick="toggleSideFilter('gender','MEN',this)" style="color:#1d4ed8;border-color:#bfdbfe;">MEN</button>
+            <button class="sg-filter-btn sg-gender-btn" data-val="WOMEN" onclick="toggleSideFilter('gender','WOMEN',this)" style="color:#be185d;border-color:#fbcfe8;">WOMEN</button>
+        </div>
+
+        <div class="sg-sidebar-divider"></div>
+
+        <!-- LINE -->
         <div class="sg-sidebar-title">LINE</div>
-        <div id="sg-line-btns"></div>
+        <div id="sg-line-btns" style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;"></div>
+
+        <div class="sg-sidebar-divider"></div>
+
+        <!-- FIT -->
+        <div class="sg-sidebar-title">FIT</div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;">
+            <button class="sg-filter-btn sg-fit-btn" data-val="SLIM" onclick="toggleSideFilter('fit','SLIM',this)" style="color:#6d28d9;border-color:#d8b4fe;">SLIM</button>
+            <button class="sg-filter-btn sg-fit-btn" data-val="REGULAR" onclick="toggleSideFilter('fit','REGULAR',this)" style="color:#0f766e;border-color:#99f6e4;">REG</button>
+            <button class="sg-filter-btn sg-fit-btn" data-val="SEMI-OVER" onclick="toggleSideFilter('fit','SEMI-OVER',this)" style="color:#92400e;border-color:#fde68a;">S-OVR</button>
+            <button class="sg-filter-btn sg-fit-btn" data-val="OVER" onclick="toggleSideFilter('fit','OVER',this)" style="color:#991b1b;border-color:#fecaca;">OVER</button>
+        </div>
     </div>
 
     <div class="main-content">
@@ -582,11 +628,30 @@
         }));
     }
 
+    function toggleSideFilter(type, val, btn) {
+        const filterMap = { gender: 'filter-gender', line: 'filter-line', fit: 'filter-fit' };
+        const selectEl = document.getElementById(filterMap[type]);
+        const btnClass = type === 'gender' ? '.sg-gender-btn' : type === 'fit' ? '.sg-fit-btn' : '.sg-line-btn';
+
+        if (selectEl.value === val) {
+            // 이미 선택된 거 누르면 해제
+            selectEl.value = '';
+            btn.classList.remove('active');
+        } else {
+            selectEl.value = val;
+            document.querySelectorAll(btnClass).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        applyFilter();
+    }
+
     function resetAll() {
         document.getElementById("filter-line").value   = "";
         document.getElementById("filter-gender").value = "";
         document.getElementById("filter-fit").value    = "";
         document.getElementById("search-input").value  = "";
+        document.querySelectorAll('.sg-line-btn, .sg-gender-btn, .sg-fit-btn')
+            .forEach(b => b.classList.remove('active'));
         applyFilter();
     }
 
@@ -632,7 +697,7 @@
         const allLines = lineOrder.filter(c => lineMap[c]).map(c => ({code: c, label: lineMap[c]}));
 
         btnWrap.innerHTML = allLines.map((l, i) =>
-            `<button class="sg-line-btn${i===0?' active':''}" onclick="selectSgLine('${l.code}', this)">${l.code}</button>`
+            `<button class="sg-line-btn" data-val="${l.code}" onclick="toggleSideFilter('line','${l.code}',this)">${l.code}</button>`
         ).join("");
 
         panelWrap.innerHTML = allLines.map((l, i) => {
