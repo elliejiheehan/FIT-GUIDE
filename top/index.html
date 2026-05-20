@@ -348,7 +348,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 20px;
             background: #fff;
         }
         .sg-sidebar-title {
@@ -518,7 +518,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 11:08</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 11:14</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -541,7 +541,7 @@
 
         <!-- GENDER -->
         <div class="sg-sidebar-title">GENDER</div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
             <button class="sg-filter-btn sg-gender-btn" data-val="MEN" onclick="toggleSideFilter('gender','MEN',this)" style="color:#1d4ed8;border-color:#bfdbfe;">MEN</button>
             <button class="sg-filter-btn sg-gender-btn" data-val="WOMEN" onclick="toggleSideFilter('gender','WOMEN',this)" style="color:#be185d;border-color:#fbcfe8;">WOMEN</button>
         </div>
@@ -556,7 +556,7 @@
 
         <!-- FIT -->
         <div class="sg-sidebar-title">FIT</div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
             <button class="sg-filter-btn sg-fit-btn" data-val="SLIM" onclick="toggleSideFilter('fit','SLIM',this)" style="color:#6d28d9;border-color:#d8b4fe;">SLIM</button>
             <button class="sg-filter-btn sg-fit-btn" data-val="REGULAR" onclick="toggleSideFilter('fit','REGULAR',this)" style="color:#0f766e;border-color:#99f6e4;">REGULAR</button>
             <button class="sg-filter-btn sg-fit-btn" data-val="SEMI-OVER" onclick="toggleSideFilter('fit','SEMI-OVER',this)" style="color:#92400e;border-color:#fde68a;">SEMI-OVER</button>
@@ -699,6 +699,18 @@
         const isOpen = panel.style.display !== "none";
         panel.style.display = isOpen ? "none" : "";
         btn.classList.toggle("active", !isOpen);
+
+        if (!isOpen) {
+            // SPEC GUIDE 열리면 필터 초기화 + 카드 숨김
+            document.getElementById("filter-line").value = "";
+            document.getElementById("filter-gender").value = "";
+            document.getElementById("filter-fit").value = "";
+            document.getElementById("search-input").value = "";
+            document.querySelectorAll('.sg-line-btn, .sg-gender-btn, .sg-fit-btn')
+                .forEach(b => b.classList.remove('active'));
+            document.getElementById("grid").innerHTML = '';
+            document.getElementById("count").textContent = '0';
+        }
     }
 
     function toggleSideFilter(type, val, btn) {
@@ -706,8 +718,11 @@
         const selectEl = document.getElementById(filterMap[type]);
         const btnClass = type === 'gender' ? '.sg-gender-btn' : type === 'fit' ? '.sg-fit-btn' : '.sg-line-btn';
 
+        // SPEC GUIDE 닫기
+        document.getElementById("size-guide-inner").style.display = "none";
+        document.getElementById("sg-spec-btn").classList.remove("active");
+
         if (selectEl.value === val) {
-            // 이미 선택된 거 누르면 해제
             selectEl.value = '';
             btn.classList.remove('active');
         } else {
@@ -786,7 +801,6 @@
                     <div class="sg-col-label">👔 Men — ${l.label}</div>
                     ${menHtml}
                 </div>
-                <div class="sg-divider"></div>
                 <div class="sg-table-block">
                     <div class="sg-col-label">👗 Women — ${l.label}</div>
                     ${womenHtml}
