@@ -552,11 +552,14 @@
 </div>
 
 <header>
-    <div>
-        <div class="header-brand">Sergio Tacchini</div>
-        <div class="header-title">Fit Guide</div>
+    <div style="display:flex;align-items:center;gap:16px;">
+        <button id="landing-back-btn" onclick="goToLanding()" style="display:none;background:rgba(255,255,255,0.15);border:none;color:#fff;padding:6px 12px;border-radius:20px;cursor:pointer;font-size:10px;font-family:var(--sans);letter-spacing:0.08em;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">← HOME</button>
+        <div>
+            <div class="header-brand">Sergio Tacchini</div>
+            <div class="header-title">Fit Guide</div>
+        </div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 18:22</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 18:26</div>
 </header>
 
 <!-- LANDING SCREEN -->
@@ -767,15 +770,35 @@
         ).join('');
     }
 
+    function goToLanding() {
+        document.getElementById("landing-screen").style.display = "flex";
+        document.getElementById("main-body").style.display = "none";
+        document.getElementById("landing-back-btn").style.display = "none";
+        resetAll();
+        document.getElementById("size-guide-inner").style.display = "none";
+        document.getElementById("sg-spec-btn").classList.remove("active");
+    }
+
     function selectFromLanding(tab) {
         document.getElementById("landing-screen").style.display = "none";
         document.getElementById("main-body").style.display = "flex";
+        document.getElementById("landing-back-btn").style.display = "inline-block";
         const topBtn    = document.getElementById("tab-top");
         const bottomBtn = document.getElementById("tab-bottom");
         if (tab === 'top') {
-            switchTab('top', topBtn);
+            currentTab = 'top';
+            document.getElementById('top-filters').style.display = 'flex';
+            document.getElementById('bottom-filters').style.display = 'none';
+            topBtn.classList.add('active');
+            bottomBtn.classList.remove('active');
+            renderCards(safeData);
         } else {
-            switchTab('bottom', bottomBtn);
+            currentTab = 'bottom';
+            document.getElementById('top-filters').style.display = 'none';
+            document.getElementById('bottom-filters').style.display = 'flex';
+            bottomBtn.classList.add('active');
+            topBtn.classList.remove('active');
+            renderCards(safeDataBottom);
         }
     }
 
