@@ -6,7 +6,7 @@
     <title>Sergio Tacchini — Top Fit Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -26,12 +26,12 @@
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.07);
             --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
             --radius: 8px;
-            --mono: 'DM Mono', monospace;
-            --sans: 'IBM Plex Sans KR', sans-serif;
+            --mono: 'Pretendard', sans-serif;
+            --sans: 'Pretendard', sans-serif;
         }
 
         body {
-            font-family: 'IBM Plex Sans KR', sans-serif !important;
+            font-family: 'Pretendard', sans-serif !important;
             background: var(--bg);
             color: var(--text-primary);
         }
@@ -47,7 +47,7 @@
             gap: 14px;
         }
         .header-brand {
-            font-family: var(--mono);
+            font-family: var(--sans);
             font-size: 10px;
             font-weight: 500;
             letter-spacing: 3px;
@@ -55,7 +55,7 @@
             color: rgba(255,255,255,0.5);
         }
         .header-title {
-            font-family: var(--mono);
+            font-family: var(--sans);
             font-size: 20px;
             font-weight: 500;
             letter-spacing: 0.1em;
@@ -64,7 +64,7 @@
         }
         .header-title .emoji { display: none; }
         .header-meta {
-            font-family: var(--mono);
+            font-family: var(--sans);
             font-size: 9px;
             color: rgba(255,255,255,0.3);
             letter-spacing: 0.1em;
@@ -85,7 +85,7 @@
         }
         #loading-screen.fade-out { opacity: 0; pointer-events: none; }
         .loading-brand {
-            font-family: var(--mono);
+            font-family: var(--sans);
             font-size: 10px;
             font-weight: 500;
             letter-spacing: 3px;
@@ -93,7 +93,7 @@
             color: var(--text-muted);
         }
         .loading-title {
-            font-family: var(--mono);
+            font-family: var(--sans);
             font-size: 22px;
             font-weight: 500;
             color: var(--text-primary);
@@ -153,13 +153,13 @@
             text-transform: uppercase;
             color: var(--text-muted);
             white-space: nowrap;
-            font-family: var(--mono);
+            font-family: var(--sans);
         }
         .filter-pill select,
         .filter-pill input {
             border: none;
             background: transparent;
-            font-family: var(--mono);
+            font-family: var(--sans);
             font-size: 12px;
             font-weight: 400;
             color: var(--text-primary);
@@ -175,7 +175,7 @@
             border: 1.5px solid var(--border);
             border-radius: 100px;
             padding: 9px 20px;
-            font-family: var(--mono);
+            font-family: var(--sans);
             font-size: 10px;
             font-weight: 500;
             letter-spacing: 1px;
@@ -250,7 +250,7 @@
             letter-spacing: 0.08em;
             color: var(--text-primary);
             margin-bottom: 8px;
-            font-family: var(--mono);
+            font-family: var(--sans);
         }
         .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
         .tag {
@@ -261,13 +261,13 @@
             text-transform: uppercase;
             letter-spacing: 0.8px;
         }
-        .tag-line  { background: var(--tag-line-bg); color: var(--tag-line-color); font-family: var(--mono); }
-        .tag-men   { background: #dbeafe; color: #1d4ed8; font-family: var(--mono); }
-        .tag-women { background: #fce7f3; color: #be185d; font-family: var(--mono); }
-        .tag-unisex{ background: #ede9fe; color: #6d28d9; font-family: var(--mono); }
+        .tag-line  { background: var(--tag-line-bg); color: var(--tag-line-color); font-family: var(--sans); }
+        .tag-men   { background: #dbeafe; color: #1d4ed8; font-family: var(--sans); }
+        .tag-women { background: #fce7f3; color: #be185d; font-family: var(--sans); }
+        .tag-unisex{ background: #ede9fe; color: #6d28d9; font-family: var(--sans); }
 
         .measures { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px; }
-        .measure-item { font-size: 10px; color: var(--text-secondary); font-family: var(--mono); }
+        .measure-item { font-size: 10px; color: var(--text-secondary); font-family: var(--sans); }
         .measure-item span { font-weight: 500; color: var(--text-primary); }
         .remark {
             font-size: 10px;
@@ -321,11 +321,11 @@
             border: 1px solid var(--border);
         }
         .modal-img img { width: 100%; object-fit: contain; object-position: center top; max-height: 420px; display: block; border-radius: 8px; }
-        .modal-info h2 { font-size: 15px; font-weight: 500; margin-bottom: 8px; font-family: var(--mono); letter-spacing: 0.06em; }
+        .modal-info h2 { font-size: 15px; font-weight: 500; margin-bottom: 8px; font-family: var(--sans); letter-spacing: 0.06em; }
         .modal-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
         .modal-table tr td { padding: 5px 8px; font-size: 11px; border-bottom: 1px solid var(--border); font-family: var(--sans); }
         .modal-table tr td:first-child { color: var(--text-muted); width: 55%; font-family: var(--sans); }
-        .modal-table tr td:last-child { font-weight: 500; color: var(--text-primary); font-family: var(--mono); }
+        .modal-table tr td:last-child { font-weight: 500; color: var(--text-primary); font-family: var(--sans); }
 
         /* ── EMPTY STATE ── */
         .empty {
@@ -352,7 +352,7 @@
             background: #fff;
         }
         .sg-sidebar-title {
-            font-family: var(--mono);
+            font-family: var(--sans);
             font-size: 9px;
             font-weight: 500;
             letter-spacing: 0.12em;
@@ -372,7 +372,7 @@
             cursor: pointer;
             background: transparent;
             color: var(--text-muted);
-            font-family: var(--mono);
+            font-family: var(--sans);
             transition: all 0.15s;
             letter-spacing: 0.08em;
             display: flex; align-items: center; justify-content: center;
@@ -391,7 +391,7 @@
             font-weight: 700;
             cursor: pointer;
             background: transparent;
-            font-family: var(--mono);
+            font-family: var(--sans);
             transition: all 0.15s;
             letter-spacing: 0.08em;
             display: flex; align-items: center; justify-content: center;
@@ -415,8 +415,8 @@
             padding: 16px 28px 20px;
         }
         .sg-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-        .sg-title { font-size: 13px; font-weight: 500; letter-spacing: 0.1em; color: var(--text-primary); font-family: var(--mono); text-transform: uppercase; }
-        .sg-toggle { background: none; border: 1px solid var(--border); border-radius: 100px; padding: 4px 12px; font-size: 10px; font-weight: 500; color: var(--text-muted); cursor: pointer; font-family: var(--mono); }
+        .sg-title { font-size: 13px; font-weight: 500; letter-spacing: 0.1em; color: var(--text-primary); font-family: var(--sans); text-transform: uppercase; }
+        .sg-toggle { background: none; border: 1px solid var(--border); border-radius: 100px; padding: 4px 12px; font-size: 10px; font-weight: 500; color: var(--text-muted); cursor: pointer; font-family: var(--sans); }
         .sg-content { display: none; }
         .sg-content.active { display: block; }
 
@@ -427,15 +427,15 @@
         .sg-table-wrap { width: 36.3%; overflow-x: auto; border-radius: 6px; border: 1px solid var(--border); margin-bottom: 14px; }
         .sg-table { width: 100%; border-collapse: collapse; font-size: 11px; }
         .sg-table thead tr { background: var(--off-white); }
-        .sg-table thead th { padding: 8px 12px; text-align: center; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; color: var(--text-muted); border-bottom: 1px solid var(--border); white-space: nowrap; font-family: var(--mono); }
+        .sg-table thead th { padding: 8px 12px; text-align: center; font-weight: 500; font-size: 10px; letter-spacing: 0.08em; color: var(--text-muted); border-bottom: 1px solid var(--border); white-space: nowrap; font-family: var(--sans); }
         .sg-table thead th:first-child { text-align: left; }
         .sg-table tbody tr { border-bottom: 1px solid var(--border); }
         .sg-table tbody tr:last-child { border-bottom: none; }
         .sg-table tbody tr:hover { background: var(--off-white); }
-        .sg-table tbody td { padding: 6px 12px; text-align: center; color: var(--text-primary); font-size: 11px; font-family: var(--mono); }
+        .sg-table tbody td { padding: 6px 12px; text-align: center; color: var(--text-primary); font-size: 11px; font-family: var(--sans); }
         .sg-table tbody td:first-child { text-align: left; font-weight: 500; color: var(--text-secondary); white-space: nowrap; font-size: 11px; font-family: var(--sans); }
         .sg-divider { height: 1px; background: var(--border); margin: 10px 0 14px; }
-        .fit-pill { display: inline-block; font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 100px; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.15s; font-family: var(--mono); }
+        .fit-pill { display: inline-block; font-size: 10px; font-weight: 500; padding: 3px 10px; border-radius: 100px; letter-spacing: 0.06em; cursor: pointer; transition: opacity 0.15s; font-family: var(--sans); }
         .fit-pill:hover { opacity: 0.75; }
         .fp-regular   { background: #ccfbf1; color: #0f766e; }
         .fp-semi-over { background: #fef3c7; color: #92400e; }
@@ -469,7 +469,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Top Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 10:35</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 10:46</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
