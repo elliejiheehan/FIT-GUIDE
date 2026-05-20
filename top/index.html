@@ -385,15 +385,15 @@
             letter-spacing: 0.08em;
             display: flex; align-items: center; justify-content: center;
         }
-        .sg-filter-btn.active { color: #fff !important; border-color: transparent !important; }
-        .sg-gender-btn[data-val="MEN"].active    { background: #1d4ed8; }
-        .sg-gender-btn[data-val="WOMEN"].active  { background: #be185d; }
-        .sg-fit-btn[data-val="SLIM"].active      { background: #6d28d9; }
-        .sg-fit-btn[data-val="REGULAR"].active   { background: #0f766e; }
-        .sg-fit-btn[data-val="SEMI-OVER"].active { background: #92400e; }
-        .sg-fit-btn[data-val="OVER"].active      { background: #991b1b; }
+        .sg-filter-btn.active { color: #fff; border-color: transparent; }
+        .sg-gender-btn[data-val="MEN"].active    { background: #1d4ed8; color: #fff; }
+        .sg-gender-btn[data-val="WOMEN"].active  { background: #be185d; color: #fff; }
+        .sg-fit-btn[data-val="SLIM"].active      { background: #6d28d9; color: #fff; }
+        .sg-fit-btn[data-val="REGULAR"].active   { background: #0f766e; color: #fff; }
+        .sg-fit-btn[data-val="SEMI-OVER"].active { background: #92400e; color: #fff; }
+        .sg-fit-btn[data-val="OVER"].active      { background: #991b1b; color: #fff; }
 
-        /* BOTTOM 버튼 — sg-filter-btn 상속 안 받게 별도 처리 */
+        /* BOTTOM 버튼 */
         .sg-b-btn {
             width: 70%; min-width: 52px; height: 32px; flex-shrink: 0;
             border-radius: 6px; border: 1px solid var(--border);
@@ -403,20 +403,27 @@
             letter-spacing: 0.08em;
             display: flex; align-items: center; justify-content: center;
         }
-        .sg-b-gender-btn { color: inherit; }
-        .sg-b-gender-btn[data-val="MEN"]   { color: #1d4ed8; border-color: #bfdbfe; }
-        .sg-b-gender-btn[data-val="WOMEN"] { color: #be185d; border-color: #fbcfe8; }
-        .sg-b-gender-btn[data-val="MEN"].active   { background: #1d4ed8; color: #fff; border-color: #1d4ed8; }
-        .sg-b-gender-btn[data-val="WOMEN"].active { background: #be185d; color: #fff; border-color: #be185d; }
-
-        .sg-b-line-btn.active   { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-        .sg-b-fabric-btn[data-val="JERSEY"] { color: #0369a1; border-color: #bae6fd; }
-        .sg-b-fabric-btn[data-val="WOVEN"]  { color: #b45309; border-color: #fde68a; }
-        .sg-b-fabric-btn[data-val="JERSEY"].active { background: #0369a1; color: #fff; border-color: #0369a1; }
-        .sg-b-fabric-btn[data-val="WOVEN"].active  { background: #b45309; color: #fff; border-color: #b45309; }
-
+        .sg-b-gender-btn[data-val="MEN"]          { color: #1d4ed8; border-color: #bfdbfe; }
+        .sg-b-gender-btn[data-val="WOMEN"]        { color: #be185d; border-color: #fbcfe8; }
+        .sg-b-gender-btn[data-val="MEN"].active   { background: #1d4ed8 !important; color: #fff !important; border-color: #1d4ed8 !important; }
+        .sg-b-gender-btn[data-val="WOMEN"].active { background: #be185d !important; color: #fff !important; border-color: #be185d !important; }
+        .sg-b-line-btn.active                     { background: var(--accent) !important; color: #fff !important; border-color: var(--accent) !important; }
+        .sg-b-fabric-btn[data-val="JERSEY"]        { color: #0369a1; border-color: #bae6fd; }
+        .sg-b-fabric-btn[data-val="WOVEN"]         { color: #b45309; border-color: #fde68a; }
+        .sg-b-fabric-btn[data-val="JERSEY"].active { background: #0369a1 !important; color: #fff !important; border-color: #0369a1 !important; }
+        .sg-b-fabric-btn[data-val="WOVEN"].active  { background: #b45309 !important; color: #fff !important; border-color: #b45309 !important; }
         .sg-b-fit-btn { font-size: 9px; }
+        .sg-b-fit-btn[data-val="SLIM"].active      { background: #6d28d9 !important; color: #fff !important; border-color: #6d28d9 !important; }
+        .sg-b-fit-btn[data-val="REGULAR"].active   { background: #0f766e !important; color: #fff !important; border-color: #0f766e !important; }
+        .sg-b-fit-btn[data-val="RELAX"].active     { background: #92400e !important; color: #fff !important; border-color: #92400e !important; }
+        .sg-b-fit-btn[data-val="A LINE"].active         { background: #be185d !important; color: #fff !important; border-color: #be185d !important; }
+        .sg-b-fit-btn[data-val="FLARE"].active          { background: #6d28d9 !important; color: #fff !important; border-color: #6d28d9 !important; }
+        .sg-b-fit-btn[data-val="LONG"].active           { background: #1d4ed8 !important; color: #fff !important; border-color: #1d4ed8 !important; }
+        .sg-b-fit-btn[data-val="CLASSIC PLEATS"].active { background: #0f766e !important; color: #fff !important; border-color: #0f766e !important; }
+        .sg-b-fit-btn[data-val="MICRO PLEATS"].active   { background: #92400e !important; color: #fff !important; border-color: #92400e !important; }
+        .sg-b-fit-btn[data-val="WIDE PLEATS"].active    { background: #991b1b !important; color: #fff !important; border-color: #991b1b !important; }
+        .sg-b-fit-btn[data-val="5부"].active { background: #6d28d9 !important; color: #fff !important; border-color: #6d28d9 !important; }
+        .sg-b-fit-btn[data-val="9부"].active { background: #0f766e !important; color: #fff !important; border-color: #0f766e !important; }
 
         /* FABRIC 태그 */
         .tag-fabric-jersey { background: #e0f2fe; color: #0369a1; }
@@ -548,7 +555,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 14:41</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 14:45</div>
 </header>
 
 <!-- FILTERS (hidden - controlled by SIZE GUIDE) -->
@@ -713,9 +720,9 @@
         const fits = BOTTOM_FIT_MAP[line] || [];
         if (!fits.length) { wrap.innerHTML = ''; return; }
         wrap.innerHTML = fits.map(f =>
-            `<button class="sg-b-btn sg-b-fit-btn" data-val="${f.val}" data-active-bg="${f.color}"
+            `<button class="sg-b-btn sg-b-fit-btn" data-val="${f.val}"
                 onclick="toggleBottomFilter('fit','${f.val}',this)"
-                style="color:${f.color};border-color:${f.border};font-size:9px;">${f.val}</button>`
+                style="color:${f.color};border-color:${f.border};">${f.val}</button>`
         ).join('');
     }
 
@@ -749,23 +756,11 @@
         if (bottomFilter[type] === val) {
             bottomFilter[type] = '';
             btn.classList.remove('active');
-            btn.style.background = 'transparent';
             if (type === 'line') { bottomFilter.fit = ''; renderBottomFitBtns(''); }
         } else {
             bottomFilter[type] = val;
-            document.querySelectorAll(btnClass).forEach(b => {
-                b.classList.remove('active');
-                b.style.background = 'transparent';
-                b.style.color = '';
-                b.style.borderColor = '';
-            });
+            document.querySelectorAll(btnClass).forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const activeBg = btn.dataset.activeBg;
-            if (activeBg) {
-                btn.style.background = activeBg;
-                btn.style.color = '#fff';
-                btn.style.borderColor = activeBg;
-            }
             if (type === 'line') { bottomFilter.fit = ''; renderBottomFitBtns(val); }
         }
         applyFilter();
