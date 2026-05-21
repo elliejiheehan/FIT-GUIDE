@@ -212,9 +212,8 @@
             animation: fadeUp 0.38s ease both;
         }
         .card:hover {
-            box-shadow: var(--shadow-md);
-            border-color: var(--accent-m);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+            transform: translateY(-4px);
         }
         .card-img {
             width: 100%;
@@ -556,7 +555,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 21일 11:51</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 21일 12:02</div>
 </header>
 
 <!-- LANDING SCREEN -->
@@ -779,8 +778,7 @@
         document.getElementById("main-body").style.display = "none";
         document.getElementById("landing-back-btn").style.display = "none";
         resetAll();
-        document.getElementById("size-guide-inner").style.display = "none";
-        document.getElementById("sg-spec-btn").classList.remove("active");
+        closeSpecGuide();
     }
 
     function selectFromLanding(tab) {
@@ -812,12 +810,8 @@
         btn.classList.add('active');
         document.getElementById('top-filters').style.display    = tab === 'top'    ? 'flex' : 'none';
         document.getElementById('bottom-filters').style.display = tab === 'bottom' ? 'flex' : 'none';
-        // SPEC GUIDE 닫기
-        document.getElementById('size-guide-inner').style.display = 'none';
-        document.getElementById('sg-spec-btn').classList.remove('active');
-        // 필터 초기화
+        closeSpecGuide();
         resetAll();
-        // 전체 카드 표시
         if (tab === 'top') renderCards(safeData);
         else renderCards(safeDataBottom);
     }
@@ -830,8 +824,7 @@
             fit:    '.sg-b-fit-btn'
         }[type];
 
-        document.getElementById('size-guide-inner').style.display = 'none';
-        document.getElementById('sg-spec-btn').classList.remove('active');
+        closeSpecGuide();
 
         if (bottomFilter[type] === val) {
             bottomFilter[type] = '';
@@ -1097,29 +1090,20 @@
         hideBackBtn();
     }
 
+    function closeSpecGuide() {
+        closeSpecGuide();
+    }
+
     function toggleSpecGuide(btn) {
         const panel = document.getElementById("size-guide-inner");
-        const isOpen = panel.style.display !== "none";
-        panel.style.display = isOpen ? "none" : "";
-        btn.classList.toggle("active", !isOpen);
-
-        if (!isOpen) {
-            showBackBtn();
-            const htmPanel = document.getElementById("htm-panel");
-            if (htmPanel) htmPanel.style.display = "none";
-            document.getElementById("filter-line").value = "";
-            document.getElementById("filter-gender").value = "";
-            document.getElementById("filter-fit").value = "";
-            const tf = document.getElementById("filter-top-fabric"); if(tf) tf.value="";
-            document.getElementById("search-input").value = "";
-            const s = document.getElementById("search-input-side"); if(s) s.value="";
-            document.querySelectorAll('.sg-line-btn, .sg-gender-btn, .sg-fit-btn, .sg-top-fabric-btn, .sg-b-gender-btn, .sg-b-line-btn, .sg-b-fabric-btn, .sg-b-fit-btn')
-                .forEach(b => b.classList.remove('active'));
-            document.getElementById("grid").innerHTML = '';
-            document.getElementById("count").textContent = '0';
-            if (currentTab === 'top') renderSizeGuide();
+        const isOpen = panel.style.display === "block";
+        if (isOpen) {
+            closeSpecGuide();
         } else {
-            hideBackBtn();
+            panel.style.display = "block";
+            btn.classList.add("active");
+            resetAll();
+            if (currentTab === 'top') renderSizeGuide();
         }
     }
 
@@ -1128,8 +1112,7 @@
         const selectEl = document.getElementById(filterMap[type]);
         const btnClass = type === 'gender' ? '.sg-gender-btn' : type === 'fit' ? '.sg-fit-btn' : type === 'fabric' ? '.sg-top-fabric-btn' : '.sg-line-btn';
 
-        document.getElementById("size-guide-inner").style.display = "none";
-        document.getElementById("sg-spec-btn").classList.remove("active");
+        closeSpecGuide();
 
         if (selectEl && selectEl.value === val) {
             selectEl.value = '';
@@ -1160,8 +1143,7 @@
         document.getElementById("grid").innerHTML = '';
         document.getElementById("count").textContent = '0';
         document.getElementById("active-filter-bar").style.display = 'none';
-        document.getElementById("size-guide-inner").style.display = 'none';
-        document.getElementById("sg-spec-btn").classList.remove('active');
+        closeSpecGuide();
     }
 
     ["filter-line","filter-gender","filter-fit"].forEach(id =>
@@ -1283,8 +1265,7 @@
 
     function filterFromSpecGuide(lineCode, gender, fit) {
         // SPEC GUIDE 닫고 카드 필터 적용
-        document.getElementById("size-guide-inner").style.display = "none";
-        document.getElementById("sg-spec-btn").classList.remove("active");
+        closeSpecGuide();
 
         // 필터 값 설정
         document.getElementById("filter-line").value   = lineCode || "";
