@@ -556,7 +556,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 20일 18:46</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 21일 09:35</div>
 </header>
 
 <!-- LANDING SCREEN -->
@@ -648,18 +648,18 @@
                 <button class="sg-b-btn sg-b-gender-btn" data-val="WOMEN" onclick="toggleBottomFilter('gender','WOMEN',this)">WOMEN</button>
             </div>
             <div class="sg-sidebar-divider"></div>
+            <div class="sg-sidebar-title">FABRIC</div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
+                <button class="sg-b-btn sg-b-fabric-btn" data-val="JERSEY" onclick="toggleBottomFilter('fabric','JERSEY',this)">JERSEY</button>
+                <button class="sg-b-btn sg-b-fabric-btn" data-val="WOVEN" onclick="toggleBottomFilter('fabric','WOVEN',this)">WOVEN</button>
+            </div>
+            <div class="sg-sidebar-divider"></div>
             <div class="sg-sidebar-title">CATEGORY</div>
             <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
                 <button class="sg-b-btn sg-b-line-btn" data-val="SP" onclick="toggleBottomFilter('line','SP',this)">SP</button>
                 <button class="sg-b-btn sg-b-line-btn" data-val="PT" onclick="toggleBottomFilter('line','PT',this)">PT</button>
                 <button class="sg-b-btn sg-b-line-btn" data-val="SK" onclick="toggleBottomFilter('line','SK',this)">SK</button>
                 <button class="sg-b-btn sg-b-line-btn" data-val="LG" onclick="toggleBottomFilter('line','LG',this)">LG</button>
-            </div>
-            <div class="sg-sidebar-divider"></div>
-            <div class="sg-sidebar-title">FABRIC</div>
-            <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
-                <button class="sg-b-btn sg-b-fabric-btn" data-val="JERSEY" onclick="toggleBottomFilter('fabric','JERSEY',this)">JERSEY</button>
-                <button class="sg-b-btn sg-b-fabric-btn" data-val="WOVEN" onclick="toggleBottomFilter('fabric','WOVEN',this)">WOVEN</button>
             </div>
             <div class="sg-sidebar-divider"></div>
             <div class="sg-sidebar-title">FIT</div>
@@ -1120,7 +1120,7 @@
         document.getElementById("filter-line").value   = "";
         document.getElementById("filter-gender").value = "";
         document.getElementById("filter-fit").value    = "";
-        document.getElementById("filter-top-fabric").value = "";
+        const tf = document.getElementById("filter-top-fabric"); if(tf) tf.value = "";
         document.getElementById("search-input").value  = "";
         const sideSearch = document.getElementById("search-input-side");
         if (sideSearch) sideSearch.value = "";
@@ -1130,10 +1130,15 @@
         bottomFilter.fabric = ''; bottomFilter.fit  = '';
         document.querySelectorAll('.sg-b-gender-btn,.sg-b-line-btn,.sg-b-fabric-btn,.sg-b-fit-btn')
             .forEach(b => b.classList.remove('active'));
-        document.getElementById("grid").innerHTML = '';
-        document.getElementById("count").textContent = '0';
+        // 필터 초기화 후 전체 카드 다시 표시
+        if (currentTab === 'top') {
+            renderCards(safeData);
+        } else {
+            renderCards(safeDataBottom);
+        }
         document.getElementById("active-filter-bar").style.display = 'none';
-        hideBackBtn();
+        document.getElementById("size-guide-inner").style.display = 'none';
+        document.getElementById("sg-spec-btn").classList.remove('active');
     }
 
     ["filter-line","filter-gender","filter-fit"].forEach(id =>
@@ -1308,12 +1313,16 @@
                     ls.classList.add("fade-out");
                     setTimeout(() => { ls.style.display = "none"; }, 600);
                     document.getElementById("count").textContent = '0';
-                    // 랜딩 카운트 업데이트
-                    const topC = document.getElementById("landing-top-count");
-                    const botC = document.getElementById("landing-bottom-count");
-                    if (topC) topC.textContent = safeData.length + " items";
-                    if (botC) botC.textContent = safeDataBottom.length + " items";
+                    // 랜딩 숨기고 메인 바로 표시
+                    document.getElementById("landing-screen").style.display = "none";
+                    document.getElementById("main-body").style.display = "flex";
+                    // TOP/BOTTOM 탭 active 없이
+                    document.getElementById("tab-top").classList.remove("active");
+                    document.getElementById("tab-bottom").classList.remove("active");
+                    // SPEC GUIDE 자동으로 열기
                     renderSizeGuide();
+                    document.getElementById("size-guide-inner").style.display = "";
+                    document.getElementById("sg-spec-btn").classList.add("active");
                 }, 300);
             }
         }, duration / steps);
