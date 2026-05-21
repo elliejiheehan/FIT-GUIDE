@@ -556,7 +556,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 21일 11:33</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 21일 11:37</div>
 </header>
 
 <!-- LANDING SCREEN -->
@@ -620,6 +620,7 @@
             <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
                 <button class="sg-filter-btn sg-gender-btn" data-val="MEN" onclick="toggleSideFilter('gender','MEN',this)">MEN</button>
                 <button class="sg-filter-btn sg-gender-btn" data-val="WOMEN" onclick="toggleSideFilter('gender','WOMEN',this)">WOMEN</button>
+                <button class="sg-filter-btn sg-gender-btn" data-val="UNISEX" onclick="toggleSideFilter('gender','UNISEX',this)">UNISEX</button>
             </div>
             <div class="sg-sidebar-divider"></div>
             <div class="sg-sidebar-title">FABRIC</div>
@@ -646,6 +647,7 @@
             <div style="display:flex;flex-direction:column;align-items:center;gap:20px;width:100%;">
                 <button class="sg-b-btn sg-b-gender-btn" data-val="MEN" onclick="toggleBottomFilter('gender','MEN',this)">MEN</button>
                 <button class="sg-b-btn sg-b-gender-btn" data-val="WOMEN" onclick="toggleBottomFilter('gender','WOMEN',this)">WOMEN</button>
+                <button class="sg-b-btn sg-b-gender-btn" data-val="UNISEX" onclick="toggleBottomFilter('gender','UNISEX',this)">UNISEX</button>
             </div>
             <div class="sg-sidebar-divider"></div>
             <div class="sg-sidebar-title">FABRIC</div>
@@ -965,13 +967,13 @@
             const gender = document.getElementById("filter-gender").value;
             const fit    = document.getElementById("filter-fit").value;
             const fabric = document.getElementById("filter-top-fabric").value;
-            if (gender) filters.push({label: gender, color: gender==='MEN'?'#1d4ed8':'#be185d'});
+            if (gender) filters.push({label: gender, color: gender==='MEN'?'#1d4ed8': gender==='WOMEN'?'#be185d':'#0f766e'});
             if (line)   filters.push({label: line,   color: '#2D4A3E'});
             if (fabric) filters.push({label: fabric, color: fabric==='JERSEY'?'#0369a1':'#854d0e'});
             if (fit)    filters.push({label: fit,    color: '#0f766e'});
         } else {
             const {gender, line, fabric, fit} = bottomFilter;
-            if (gender) filters.push({label: gender, color: gender==='MEN'?'#1d4ed8':'#be185d'});
+            if (gender) filters.push({label: gender, color: gender==='MEN'?'#1d4ed8': gender==='WOMEN'?'#be185d':'#0f766e'});
             if (line)   filters.push({label: line,   color: '#2D4A3E'});
             if (fabric) filters.push({label: fabric, color: fabric==='JERSEY'?'#0369a1':'#b45309'});
             if (fit)    filters.push({label: fit,    color: '#0f766e'});
@@ -1007,8 +1009,12 @@
             renderCards(safeData.filter(item => {
                 const ref = String(item.ref || "").toUpperCase();
                 const isTX = ref.startsWith("TX-");
-                const effectiveGender = isTX ? "MEN" : item.gender;
-                return (!gender || effectiveGender === gender) &&
+                // MEN: MEN + TX 둘 다, WOMEN: WOMEN만, UNISEX: TX만
+                const genderMatch = !gender ||
+                    (gender === 'MEN'    && (item.gender === 'MEN' || isTX)) ||
+                    (gender === 'WOMEN'  && item.gender === 'WOMEN') ||
+                    (gender === 'UNISEX' && isTX);
+                return genderMatch &&
                        (!line   || item.line    === line)   &&
                        (!fit    || item.fit     === fit)    &&
                        (!fabric || item.fabric  === fabric) &&
@@ -1026,9 +1032,15 @@
                 return;
             }
             renderCards(safeDataBottom.filter(item => {
+                const ref = String(item.ref || "").toUpperCase();
+                const isTX = ref.startsWith("TX-");
+                const genderMatch = !gender ||
+                    (gender === 'MEN'    && (item.gender === 'MEN' || isTX)) ||
+                    (gender === 'WOMEN'  && item.gender === 'WOMEN') ||
+                    (gender === 'UNISEX' && isTX);
                 const itemFit = item.line === 'SK' ? item.subtype :
                                 item.line === 'LG' ? item.subtype : item.fit;
-                return (!gender || item.gender === gender) &&
+                return genderMatch &&
                        (!line   || item.line   === line)   &&
                        (!fabric || item.fabric === fabric) &&
                        (!fit    || itemFit     === fit)    &&
