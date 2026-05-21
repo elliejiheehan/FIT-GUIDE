@@ -556,7 +556,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 21일 11:39</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 21일 11:45</div>
 </header>
 
 <!-- LANDING SCREEN -->
@@ -576,7 +576,7 @@
     </div>
 </div>
 <div style="display:none">
-    <select id="filter-gender"><option value="">All</option><option value="MEN">MEN</option><option value="WOMEN">WOMEN</option></select>
+    <select id="filter-gender"><option value="">All</option><option value="MEN">MEN</option><option value="WOMEN">WOMEN</option><option value="UNISEX">UNISEX</option></select>
     <select id="filter-line"><option value="">All</option><option value="SL">SL</option><option value="RS">RS</option><option value="MT">MT</option><option value="PQ">PQ</option><option value="RL">RL</option><option value="TR">TR</option><option value="WJ">WJ</option></select>
     <select id="filter-fit"><option value="">All</option><option value="SLIM">SLIM</option><option value="REGULAR">REGULAR</option><option value="SEMI-OVER">SEMI-OVER</option><option value="OVER">OVER</option></select>
     <select id="filter-top-fabric"><option value="">All</option><option value="JERSEY">JERSEY</option><option value="WOVEN">WOVEN</option></select>
@@ -812,9 +812,14 @@
         btn.classList.add('active');
         document.getElementById('top-filters').style.display    = tab === 'top'    ? 'flex' : 'none';
         document.getElementById('bottom-filters').style.display = tab === 'bottom' ? 'flex' : 'none';
+        // SPEC GUIDE 닫기
         document.getElementById('size-guide-inner').style.display = 'none';
         document.getElementById('sg-spec-btn').classList.remove('active');
+        // 필터 초기화
         resetAll();
+        // 전체 카드 표시
+        if (tab === 'top') renderCards(safeData);
+        else renderCards(safeDataBottom);
     }
 
     function toggleBottomFilter(type, val, btn) {
@@ -1151,12 +1156,9 @@
         bottomFilter.fabric = ''; bottomFilter.fit  = '';
         document.querySelectorAll('.sg-b-gender-btn,.sg-b-line-btn,.sg-b-fabric-btn,.sg-b-fit-btn')
             .forEach(b => b.classList.remove('active'));
-        // 필터 초기화 후 전체 카드 다시 표시
-        if (currentTab === 'top') {
-            renderCards(safeData);
-        } else {
-            renderCards(safeDataBottom);
-        }
+        // 카드 비우기
+        document.getElementById("grid").innerHTML = '';
+        document.getElementById("count").textContent = '0';
         document.getElementById("active-filter-bar").style.display = 'none';
         document.getElementById("size-guide-inner").style.display = 'none';
         document.getElementById("sg-spec-btn").classList.remove('active');
