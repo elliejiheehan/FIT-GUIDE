@@ -555,7 +555,7 @@
         <div class="header-brand">Sergio Tacchini</div>
         <div class="header-title">Fit Guide</div>
     </div>
-    <div class="header-meta" id="last-updated">Updated: 2026년 05월 21일 12:02</div>
+    <div class="header-meta" id="last-updated">Updated: 2026년 05월 21일 12:05</div>
 </header>
 
 <!-- LANDING SCREEN -->
@@ -802,6 +802,11 @@
             topBtn.classList.remove('active');
             renderCards(safeDataBottom);
         }
+    }
+
+    function closeSpecGuide() {
+        document.getElementById("size-guide-inner").style.display = "none";
+        document.getElementById("sg-spec-btn").classList.remove("active");
     }
 
     function switchTab(tab, btn) {
@@ -1088,10 +1093,6 @@
         // 필터 걸려있으면 초기화
         resetAll();
         hideBackBtn();
-    }
-
-    function closeSpecGuide() {
-        closeSpecGuide();
     }
 
     function toggleSpecGuide(btn) {
