@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /S /B index_template*)",
+      "Bash(dir /S /B *template*)"
+    ]
+  }
+}
